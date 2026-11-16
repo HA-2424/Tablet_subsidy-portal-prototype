@@ -1,0 +1,2974 @@
+<!doctype html>
+<html lang="en" class="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PolyU Design Subsidy Portal — School of Design</title>
+    <meta
+      name="description"
+      content="Tablet-first Competition Subsidy Scheme portal for The Hong Kong Polytechnic University School of Design."
+    />
+    <meta property="og:title" content="PolyU Design Subsidy Portal" />
+    <meta
+      property="og:description"
+      content="Direct institutional bursaries, claim workflows, and post-approval disbursement hub for PolyU School of Design."
+    />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+              serif: ['Georgia', 'Times New Roman', 'serif'],
+            },
+            colors: {
+              polyu: {
+                red: '#D22630',
+                crimson: '#B30923',
+                deep: '#9E0B22',
+              },
+            },
+          },
+        },
+      };
+    </script>
+    <style>
+      .tabular-nums {
+        font-variant-numeric: tabular-nums;
+      }
+      /* Subtle custom scrollbar inside tablet frame */
+      .tablet-scroll::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      .tablet-scroll::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .tablet-scroll::-webkit-scrollbar-thumb {
+        background: rgba(156, 163, 175, 0.4);
+        border-radius: 9999px;
+      }
+      .dark .tablet-scroll::-webkit-scrollbar-thumb {
+        background: rgba(113, 113, 122, 0.5);
+      }
+      @keyframes subtleShake {
+        0%, 100% { transform: translateX(0); }
+        20% { transform: translateX(-5px); }
+        40% { transform: translateX(5px); }
+        60% { transform: translateX(-4px); }
+        80% { transform: translateX(4px); }
+      }
+      .animate-shake {
+        animation: subtleShake 0.35s ease-in-out;
+      }
+    </style>
+  </head>
+  <body class="bg-[#D5D7DD] dark:bg-[#090B0F] text-[#18181B] dark:text-[#F4F4F5] font-sans antialiased transition-colors duration-200 selection:bg-[#D22630] selection:text-white">
+    <!-- Tablet Shell Outer Wrapper -->
+    <div class="relative max-w-[1024px] mx-auto h-screen overflow-hidden bg-white dark:bg-[#111318] shadow-[0_20px_60px_-15px_rgba(0,0,0,0.28)] border-x border-black/5 dark:border-white/10">
+      <!-- Floating Theme Toggle (Top Right of Tablet Container) -->
+      <button
+        id="theme-toggle-btn"
+        type="button"
+        aria-label="Toggle Light and Dark Mode"
+        title="Toggle Light / Dark Mode"
+        class="absolute top-3 right-4 z-50 w-9 h-9 rounded-full flex items-center justify-center bg-[#9E0B22] hover:bg-[#D22630] text-white shadow-md ring-2 ring-white/80 dark:ring-[#111318] transition-all duration-150 cursor-pointer"
+      >
+        <!-- Sun Icon (shown in Dark Mode) -->
+        <svg id="icon-sun" class="hidden w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"></path>
+        </svg>
+        <!-- Moon Icon (shown in Light Mode) -->
+        <svg id="icon-moon" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+        </svg>
+      </button>
+
+      <!-- Non-blocking Toast Banner -->
+      <div
+        id="toast-banner"
+        class="hidden absolute bottom-5 right-5 z-50 max-w-sm bg-[#18181B] dark:bg-[#27272A] text-white text-xs font-medium px-4 py-3 rounded-xl shadow-lg border border-white/10 flex items-center gap-2.5"
+      >
+        <span class="w-2 h-2 rounded-full bg-[#34D399] shrink-0"></span>
+        <span id="toast-message">Action completed.</span>
+      </div>
+
+      <!-- ========================================================= -->
+      <!-- SCREEN 1: HOME PAGE                                       -->
+      <!-- ========================================================= -->
+      <section id="screen-1" class="h-screen overflow-y-auto tablet-scroll bg-white dark:bg-[#111318] flex flex-col justify-between">
+        <div>
+          <!-- Public Top Navbar -->
+          <header class="px-7 py-4 pr-16 flex items-center justify-between border-b border-black/5 dark:border-white/10">
+            <div class="flex items-center select-none">
+              <div class="font-extrabold tracking-tight leading-[0.88] text-[17px] text-[#111827] dark:text-white">
+                <div>POLYU</div>
+                <div>DES<span class="inline-block w-[6px] h-[6px] rounded-full bg-[#D22630] align-middle mx-[1px] -mt-0.5"></span>GN</div>
+              </div>
+            </div>
+
+            <nav class="hidden md:flex items-center gap-4 text-[12px] font-semibold">
+              <button type="button" onclick="showToast('Viewing Competition Subsidy Scheme Overview')" class="px-3.5 py-1.5 rounded-full bg-[#9E0B22] text-white whitespace-nowrap shrink-0 cursor-pointer">
+                Overview
+              </button>
+              <button type="button" onclick="showToast('Eligible Awards: Tier 1 & Tier 2 International Contests')" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] dark:hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+                Eligible Awards
+              </button>
+              <button type="button" onclick="showToast('Subsidies cover up to 100% registration & HK$1,000 freight')" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] dark:hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+                Grant Guidelines
+              </button>
+              <button type="button" onclick="showToast('Tier 1 Cap: HK$15,000 · Tier 2 Cap: HK$10,000')" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] dark:hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+                Tier Matrix
+              </button>
+              <button type="button" onclick="showToast('FAQ: Contact SD General Office Room V810')" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] dark:hover:text-white transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+                FAQ
+              </button>
+            </nav>
+
+            <div class="flex items-center gap-2 shrink-0">
+              <button
+                type="button"
+                id="btn-home-login"
+                onclick="navigateTo(2)"
+                class="h-9 px-4 rounded-full bg-[#9E0B22] hover:bg-[#D22630] text-white text-[12px] font-semibold flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 cursor-pointer shadow-sm"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+                <span>Login</span>
+              </button>
+              <button
+                type="button"
+                onclick="navigateTo(2)"
+                aria-label="Open Portal Menu"
+                class="w-9 h-9 rounded-full bg-[#9E0B22] hover:bg-[#D22630] text-white flex items-center justify-center transition-colors shrink-0 cursor-pointer"
+              >
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </button>
+            </div>
+          </header>
+
+          <!-- Hero Content -->
+          <div class="px-7 pt-7 pb-6">
+            <div class="max-w-[380px]">
+              <h1 class="text-[40px] leading-[1.03] font-extrabold tracking-tight text-[#111827] dark:text-white">
+                Connect to<br />Subsidy.
+              </h1>
+              <p class="mt-3 text-[13px] leading-[1.55] text-[#52525B] dark:text-[#A1A1AA]">
+                Direct institutional bursaries for Tier-1 international design competitions, prototyping fabrication &amp; global travel delegations.
+              </p>
+              <button
+                type="button"
+                onclick="navigateTo(2)"
+                class="mt-5 inline-flex items-center gap-3 pl-5 pr-2 py-2 rounded-full bg-[#9E0B22] hover:bg-[#D22630] text-white text-[13px] font-semibold shadow-sm transition-colors cursor-pointer whitespace-nowrap"
+              >
+                <span>New Application</span>
+                <span class="w-7 h-7 rounded-full bg-white/15 flex items-center justify-center">
+                  <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </span>
+              </button>
+            </div>
+
+            <!-- Portal Gateways Section -->
+            <div class="mt-8">
+              <div class="flex items-center justify-between mb-3.5">
+                <div class="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-[#18181B] dark:text-[#E4E4E7]">
+                  <svg class="w-3.5 h-3.5 text-[#18181B] dark:text-[#E4E4E7]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+                  </svg>
+                  <span>PORTAL GATEWAYS</span>
+                </div>
+                <span class="text-[11px] font-semibold text-[#52525B] dark:text-[#A1A1AA]">Choose Role</span>
+              </div>
+
+              <!-- 3 Role Track Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Track 01 -->
+                <div
+                  onclick="selectRoleAndLogin('Student')"
+                  role="button"
+                  tabindex="0"
+                  class="group bg-[#A50F24] hover:bg-[#B81128] text-white rounded-[24px] p-5 flex flex-col justify-between min-h-[215px] transition-colors cursor-pointer shadow-sm"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-[10px] font-semibold tracking-wider uppercase text-white/80">TRACK 01</span>
+                      <span class="px-2.5 py-0.5 rounded-full bg-white/15 text-[10px] font-medium text-white whitespace-nowrap">HK$20K Quota</span>
+                    </div>
+                    <h2 class="mt-2.5 text-[21px] leading-[1.15] font-bold">Student<br />Applicant</h2>
+                    <p class="mt-2.5 text-[12px] leading-[1.5] text-white/90">
+                      Submit international contest entries, upload verified prototypes, and track faculty supervisor sign-offs in real-time.
+                    </p>
+                  </div>
+                  <div class="mt-5 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[11px] font-medium text-white/90">
+                      <span class="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-10.422L12 14z"></path>
+                        </svg>
+                      </span>
+                      <span>Instant NetID Access</span>
+                    </div>
+                    <span class="w-8 h-8 rounded-full bg-white text-[#9E0B22] flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Track 02 -->
+                <div
+                  onclick="selectRoleAndLogin('Endorser')"
+                  role="button"
+                  tabindex="0"
+                  class="group bg-[#9E0B22] hover:bg-[#B30923] text-white rounded-[24px] p-5 flex flex-col justify-between min-h-[215px] transition-colors cursor-pointer shadow-sm"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-[10px] font-semibold tracking-wider uppercase text-white/80">TRACK 02</span>
+                      <span class="px-2.5 py-0.5 rounded-full bg-white/15 text-[10px] font-medium text-white whitespace-nowrap">48h SLA</span>
+                    </div>
+                    <h2 class="mt-2.5 text-[21px] leading-[1.15] font-bold">Academic<br />Endorser</h2>
+                    <p class="mt-2.5 text-[12px] leading-[1.5] text-white/90">
+                      Review nominated studio work, validate competitive tiers, and expedite departmental recommendations for graduation shows.
+                    </p>
+                  </div>
+                  <div class="mt-5 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[11px] font-medium text-white/90">
+                      <span class="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                        </svg>
+                      </span>
+                      <span>Studio Leads &amp; Tutors</span>
+                    </div>
+                    <span class="w-8 h-8 rounded-full bg-white text-[#9E0B22] flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Track 03 -->
+                <div
+                  onclick="selectRoleAndLogin('Admin')"
+                  role="button"
+                  tabindex="0"
+                  class="group bg-[#8C0619] hover:bg-[#9E0B22] text-white rounded-[24px] p-5 flex flex-col justify-between min-h-[215px] transition-colors cursor-pointer shadow-sm"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2">
+                      <span class="text-[10px] font-semibold tracking-wider uppercase text-white/80">TRACK 03</span>
+                      <span class="px-2.5 py-0.5 rounded-full bg-white/15 text-[10px] font-medium text-white whitespace-nowrap">General Office</span>
+                    </div>
+                    <h2 class="mt-2.5 text-[21px] leading-[1.15] font-bold">Admin<br />Verifier</h2>
+                    <p class="mt-2.5 text-[12px] leading-[1.5] text-white/90">
+                      Audit official tax invoices, execute foreign exchange adjustments, and trigger batch bursary disbursements.
+                    </p>
+                  </div>
+                  <div class="mt-5 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[11px] font-medium text-white/90">
+                      <span class="w-6 h-6 rounded-full bg-white/15 flex items-center justify-center">
+                        <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                        </svg>
+                      </span>
+                      <span>Verifier Gateway</span>
+                    </div>
+                    <span class="w-8 h-8 rounded-full bg-white text-[#8C0619] flex items-center justify-center group-hover:translate-x-0.5 transition-transform">
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Advising Pill -->
+              <div class="mt-5">
+                <button
+                  type="button"
+                  onclick="showToast('SD General Office Counter: 8/F V810 (Mon–Fri 09:00–17:30)')"
+                  class="inline-flex items-center gap-4 bg-[#A50F24] hover:bg-[#B81128] text-white rounded-full pl-4 pr-2 py-2 text-left transition-colors cursor-pointer"
+                >
+                  <div>
+                    <div class="text-[10px] font-semibold text-white/90">Need bursary advising?</div>
+                    <div class="text-[11px] font-medium text-white/80">SD General Office counter 8/F V810</div>
+                  </div>
+                  <span class="w-7 h-7 rounded-full bg-white text-[#A50F24] flex items-center justify-center shrink-0">
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8 10h8M8 14h5m-9 6l2.3-2.3A9 9 0 1121 12a9 9 0 01-9 9 8.95 8.95 0 01-4.3-1.1L4 20z"></path>
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Centered Institutional Footer -->
+        <footer class="px-7 py-6 text-center">
+          <div class="inline-block font-extrabold tracking-tight leading-[0.88] text-[16px] text-[#52525B] dark:text-[#A1A1AA] select-none">
+            <div>POLYU</div>
+            <div>DES<span class="inline-block w-[5px] h-[5px] rounded-full bg-[#71717A] align-middle mx-[1px] -mt-0.5"></span>GN</div>
+          </div>
+          <p class="mt-2.5 text-[10px] font-bold tracking-[0.12em] uppercase text-[#52525B] dark:text-[#71717A]">
+            COMPETITION SUBSIDY SCHEME SCHOOL OF DESIGN
+          </p>
+        </footer>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- SCREEN 2: LOGIN                                           -->
+      <!-- ========================================================= -->
+      <section id="screen-2" class="hidden h-screen overflow-y-auto tablet-scroll relative bg-[#E2E8F0] dark:bg-[#0D1117] flex flex-col">
+        <!-- Top Navbar (Matching Home) -->
+        <header class="relative z-20 px-7 py-4 pr-16 flex items-center justify-between bg-white/95 dark:bg-[#111318]/95 backdrop-blur-sm border-b border-black/5 dark:border-white/10">
+          <button type="button" onclick="navigateTo(1)" class="flex items-center select-none text-left cursor-pointer">
+            <div class="font-extrabold tracking-tight leading-[0.88] text-[17px] text-[#111827] dark:text-white">
+              <div>POLYU</div>
+              <div>DES<span class="inline-block w-[6px] h-[6px] rounded-full bg-[#D22630] align-middle mx-[1px] -mt-0.5"></span>GN</div>
+            </div>
+          </button>
+
+          <nav class="hidden md:flex items-center gap-4 text-[12px] font-semibold">
+            <button type="button" onclick="navigateTo(1)" class="px-3.5 py-1.5 rounded-full bg-[#9E0B22] text-white whitespace-nowrap shrink-0 cursor-pointer">
+              Overview
+            </button>
+            <button type="button" onclick="navigateTo(1)" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Eligible Awards
+            </button>
+            <button type="button" onclick="navigateTo(1)" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Grant Guidelines
+            </button>
+            <button type="button" onclick="navigateTo(1)" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              Tier Matrix
+            </button>
+            <button type="button" onclick="navigateTo(1)" class="text-[#18181B] dark:text-[#D4D4D8] hover:text-[#D22630] transition-colors whitespace-nowrap shrink-0 cursor-pointer">
+              FAQ
+            </button>
+          </nav>
+
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="navigateTo(1)" aria-label="Back to Home" class="w-9 h-9 rounded-full bg-[#9E0B22] text-white flex items-center justify-center cursor-pointer">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+              </svg>
+            </button>
+          </div>
+        </header>
+
+        <!-- Architectural Sky & Campus Backdrop (Self-contained SVG + gradient) -->
+        <div class="relative flex-1 flex items-center px-8 py-8 overflow-hidden">
+          <div class="absolute inset-0 pointer-events-none select-none overflow-hidden">
+            <!-- Sky Gradient -->
+            <div class="absolute inset-0 bg-gradient-to-br from-[#F8FAFC] via-[#BAE6FD]/60 to-[#0284C7]/45 dark:from-[#0F172A] dark:via-[#1E293B] dark:to-[#090D16]"></div>
+            <!-- Architectural Campus Silhouette SVG -->
+            <svg viewBox="0 0 1024 640" preserveAspectRatio="xMidYMid slice" class="w-full h-full opacity-90 dark:opacity-40">
+              <defs>
+                <linearGradient id="skyGrad" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.95" />
+                  <stop offset="50%" stop-color="#7DD3FC" stop-opacity="0.55" />
+                  <stop offset="100%" stop-color="#0369A1" stop-opacity="0.65" />
+                </linearGradient>
+                <linearGradient id="steelGrad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="#F1F5F9" />
+                  <stop offset="45%" stop-color="#94A3B8" />
+                  <stop offset="100%" stop-color="#1E293B" />
+                </linearGradient>
+              </defs>
+              <rect width="1024" height="640" fill="url(#skyGrad)" />
+              <!-- Soft sunlit clouds -->
+              <ellipse cx="440" cy="140" rx="220" ry="90" fill="#FFFFFF" fill-opacity="0.55" />
+              <ellipse cx="700" cy="110" rx="180" ry="70" fill="#FFFFFF" fill-opacity="0.45" />
+              <!-- Jockey Club Innovation Tower / Campus Sculpture Lines -->
+              <polygon points="480,0 640,0 595,430 435,430" fill="url(#steelGrad)" opacity="0.45" />
+              <path d="M490 95 C560 40, 620 140, 560 230 C510 305, 440 340, 520 420" fill="none" stroke="#CBD5E1" stroke-width="34" stroke-linecap="round" opacity="0.65" />
+              <path d="M490 95 C560 40, 620 140, 560 230 C510 305, 440 340, 520 420" fill="none" stroke="#334155" stroke-width="10" stroke-linecap="round" opacity="0.55" />
+              <!-- Lower Architectural Terraces -->
+              <polygon points="0,480 280,430 340,640 0,640" fill="#334155" opacity="0.32" />
+              <polygon points="40,515 250,480 270,560 55,595" fill="#7DD3FC" opacity="0.4" />
+              <circle cx="510" cy="590" r="140" fill="#3F6212" opacity="0.28" />
+              <circle cx="420" cy="610" r="110" fill="#4D7C0F" opacity="0.25" />
+            </svg>
+          </div>
+
+          <!-- Login 2-Column Content -->
+          <div class="relative z-10 w-full grid grid-cols-1 md:grid-cols-12 gap-8 items-center">
+            <!-- Left Welcome Column -->
+            <div class="md:col-span-6 pr-4">
+              <!-- Interlocking PolyU Geometric Emblem -->
+              <div class="w-20 h-20 mb-5">
+                <svg viewBox="0 0 100 100" class="w-full h-full">
+                  <g fill="none" stroke="#B30923" stroke-width="9" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M50 14 L78 42 L50 70 L22 42 Z" />
+                    <path d="M50 30 L78 58 L50 86 L22 58 Z" />
+                    <path d="M36 28 L64 56" />
+                    <path d="M64 28 L36 56" />
+                  </g>
+                </svg>
+              </div>
+
+              <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#9E0B22] text-white text-[10px] font-bold tracking-wider uppercase mb-4">
+                <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path>
+                </svg>
+                <span>ACADEMIC YEAR 2024/25 GATEWAY</span>
+              </div>
+
+              <h1 class="text-[44px] leading-[1.02] font-extrabold tracking-tight text-[#0F172A] dark:text-white">
+                WelcomeBack.
+              </h1>
+              <p class="mt-4 text-[13px] leading-[1.6] text-[#1E293B] dark:text-[#CBD5E1] max-w-[330px]">
+                Log in with your university credentials to access student bursaries, budget tracking, and fast-track endorsements.
+              </p>
+            </div>
+
+            <!-- Right Frosted Sign In Card -->
+            <div class="md:col-span-6">
+              <div class="bg-[#52525B]/75 dark:bg-[#18181B]/85 backdrop-blur-md text-white rounded-[28px] p-7 shadow-2xl border border-white/20">
+                <!-- Role Segmented Control -->
+                <div class="bg-black/25 rounded-full p-1 grid grid-cols-3 gap-1 text-[12px] font-semibold">
+                  <button type="button" data-login-role="Student" onclick="setLoginRole('Student')" class="login-role-btn py-1.5 rounded-full bg-[#A50F24] text-white transition-colors cursor-pointer">
+                    Student
+                  </button>
+                  <button type="button" data-login-role="Endorser" onclick="setLoginRole('Endorser')" class="login-role-btn py-1.5 rounded-full text-white/80 hover:text-white transition-colors cursor-pointer">
+                    Endorser
+                  </button>
+                  <button type="button" data-login-role="Admin" onclick="setLoginRole('Admin')" class="login-role-btn py-1.5 rounded-full text-white/80 hover:text-white transition-colors cursor-pointer">
+                    Admin
+                  </button>
+                </div>
+
+                <h2 class="mt-6 text-[24px] font-bold tracking-tight">Sign In to Portal</h2>
+                <p class="mt-1 text-[12px] text-white/75">
+                  Enter your PolyU NetID credentials to manage bursaries and subsidies.
+                </p>
+
+                <!-- Form -->
+                <form onsubmit="event.preventDefault(); navigateTo(3);" class="mt-5 space-y-4">
+                  <div>
+                    <label for="login-netid" class="block text-[10px] font-bold tracking-wider uppercase text-white/85 mb-1.5">
+                      STUDENT ID / NETID
+                    </label>
+                    <div class="relative flex items-center bg-black/25 border border-white/20 rounded-full px-4 py-2.5">
+                      <svg class="w-4 h-4 text-white/70 mr-2.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0"></path>
+                      </svg>
+                      <input
+                        id="login-netid"
+                        type="text"
+                        value="21088492D"
+                        class="bg-transparent text-[13px] font-mono text-white w-full focus:outline-none"
+                      />
+                      <span class="px-2 py-0.5 rounded-full bg-white/85 text-[#0F6E6E] text-[10px] font-bold whitespace-nowrap shrink-0">
+                        ✓ Verified
+                      </span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="login-password" class="block text-[10px] font-bold tracking-wider uppercase text-white/85 mb-1.5">
+                      PASSWORD
+                    </label>
+                    <div class="relative flex items-center bg-black/25 border border-white/20 rounded-full px-4 py-2.5">
+                      <svg class="w-4 h-4 text-white/70 mr-2.5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                      </svg>
+                      <input
+                        id="login-password"
+                        type="text"
+                        value="PolyUDesign!2024"
+                        class="bg-transparent text-[13px] text-white w-full focus:outline-none"
+                      />
+                      <button
+                        type="button"
+                        onclick="toggleLoginPassword()"
+                        aria-label="Toggle password visibility"
+                        class="text-white/70 hover:text-white ml-2 cursor-pointer"
+                      >
+                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="flex items-center justify-between text-[11px]">
+                    <label class="inline-flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" checked class="w-4 h-4 rounded accent-[#D22630]" />
+                      <span class="text-white/90">Remember credentials</span>
+                    </label>
+                    <button type="button" onclick="showToast('Password reset routed via PolyU ITS NetID Self-Service')" class="font-semibold text-[#FCA5A5] hover:text-white transition-colors cursor-pointer">
+                      Forgot Password?
+                    </button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    id="btn-login-netid"
+                    class="w-full py-3 rounded-full bg-[#A50F24] hover:bg-[#D22630] text-white text-[14px] font-bold flex items-center justify-center gap-2 shadow-lg transition-colors cursor-pointer"
+                  >
+                    <span>Login with NetID</span>
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                    </svg>
+                  </button>
+                </form>
+
+                <div class="my-5 flex items-center gap-3 text-[10px] font-semibold tracking-wider uppercase text-white/60">
+                  <div class="flex-1 h-px bg-white/20"></div>
+                  <span>INSTITUTIONAL SSO</span>
+                  <div class="flex-1 h-px bg-white/20"></div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onclick="navigateTo(3)"
+                    class="py-2 px-3 rounded-full bg-black/25 hover:bg-black/40 border border-white/15 text-[11px] font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                    </svg>
+                    <span>Staff CAS Auth</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick="navigateTo(3)"
+                    class="py-2 px-3 rounded-full bg-black/25 hover:bg-black/40 border border-white/15 text-[11px] font-semibold flex items-center justify-center gap-2 transition-colors cursor-pointer"
+                  >
+                    <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                    </svg>
+                    <span>Jury Guest Pass</span>
+                  </button>
+                </div>
+
+                <div class="mt-5 text-center text-[10px] leading-relaxed text-white/75">
+                  Need quota elevation or support?
+                  <button type="button" onclick="showToast('General Office Helpdesk: sd.subsidy@polyu.edu.hk')" class="text-[#FCA5A5] font-semibold hover:underline cursor-pointer">
+                    General Office Helpdesk
+                  </button>
+                  <div class="text-white/55 mt-0.5">© The Hong Kong Polytechnic University • School of Design</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================================= -->
+      <!-- AUTHENTICATED PORTAL SHELL (SCREENS 3 - 11)               -->
+      <!-- ========================================================= -->
+      <div id="portal-shell" class="hidden h-screen flex bg-white dark:bg-[#111318]">
+        <!-- Left Sidebar (196px Tablet Rail) -->
+        <aside class="w-[196px] shrink-0 bg-[#F4F4F5] dark:bg-[#17191E] border-r border-[#D22630] flex flex-col justify-between p-4">
+          <div>
+            <!-- Brand -->
+            <button type="button" onclick="navigateTo(3)" class="px-2 py-1 text-left select-none cursor-pointer">
+              <div class="font-extrabold tracking-tight leading-[0.88] text-[17px] text-[#111827] dark:text-white">
+                <div>POLYU</div>
+                <div>DES<span class="inline-block w-[6px] h-[6px] rounded-full bg-[#D22630] align-middle mx-[1px] -mt-0.5"></span>GN</div>
+              </div>
+            </button>
+
+            <!-- Nav Links -->
+            <nav class="mt-7 space-y-1.5 text-[12px] font-semibold">
+              <button
+                type="button"
+                data-nav="dashboard"
+                onclick="navigateTo(3)"
+                class="sidebar-nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                  <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                  <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                  <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+                </svg>
+                <span>Dashboard</span>
+              </button>
+
+              <button
+                type="button"
+                id="sidebar-my-apps-btn"
+                data-nav="applications"
+                onclick="navigateTo('my-apps')"
+                class="sidebar-nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                </svg>
+                <span>My Applications</span>
+              </button>
+
+              <button
+                type="button"
+                data-nav="reimbursements"
+                onclick="navigateTo(10)"
+                class="sidebar-nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z"></path>
+                </svg>
+                <span>Reimbursements</span>
+              </button>
+
+              <button
+                type="button"
+                data-nav="guidelines"
+                onclick="showToast('Tier-1 & Tier-2 Subsidy Guidelines: 100% Entry Fee + max HK$1,000 Freight')"
+                class="sidebar-nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                </svg>
+                <span>Guidelines</span>
+              </button>
+
+              <button
+                type="button"
+                id="sidebar-new-app-btn"
+                data-nav="new-application"
+                onclick="navigateTo(4)"
+                class="sidebar-nav-btn w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-left transition-colors cursor-pointer"
+              >
+                <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v8m-4-4h8"></path>
+                </svg>
+                <span>+ New Application</span>
+              </button>
+            </nav>
+          </div>
+
+          <!-- Bottom Profile Badge -->
+          <div class="bg-[#DCDCE0] dark:bg-[#23262F] rounded-2xl p-2.5 flex items-center justify-between gap-2">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <div class="w-8 h-8 rounded-full bg-[#B30923] text-white flex items-center justify-center shrink-0">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                </svg>
+              </div>
+              <div class="min-w-0">
+                <div class="text-[11px] font-bold text-[#18181B] dark:text-white truncate">Peter K.C.</div>
+                <div class="text-[10px] font-mono text-[#52525B] dark:text-[#A1A1AA] truncate">ID: 21088492D</div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onclick="navigateTo(1)"
+              title="Sign Out to Home"
+              aria-label="Sign Out"
+              class="p-1 text-[#52525B] dark:text-[#A1A1AA] hover:text-[#D22630] transition-colors shrink-0 cursor-pointer"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+            </button>
+          </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <div class="flex-1 flex flex-col min-w-0 h-screen">
+          <!-- Top Utility Bar (with Crimson Hairline Bottom Border) -->
+          <header class="h-[58px] shrink-0 border-b border-[#D22630] px-6 pr-16 flex items-center justify-between bg-white dark:bg-[#111318]">
+            <div class="w-8"></div>
+            <div class="relative w-[270px]">
+              <svg class="w-3.5 h-3.5 text-[#52525B] dark:text-[#A1A1AA] absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                <circle cx="11" cy="11" r="7"></circle>
+                <path stroke-linecap="round" d="M21 21l-4.35-4.35"></path>
+              </svg>
+              <input
+                id="global-search"
+                type="text"
+                placeholder="Search grants, claims..."
+                oninput="handleGlobalSearch(this.value)"
+                class="w-full bg-[#D4D4D8]/80 dark:bg-[#22252E] text-[12px] text-[#18181B] dark:text-white placeholder-[#52525B] dark:placeholder-[#9CA3AF] rounded-full pl-9 pr-4 py-1.5 focus:outline-none focus:ring-2 focus:ring-[#D22630]/40"
+              />
+            </div>
+            <button
+              type="button"
+              onclick="showToast('1 new endorsement reminder: Prof. Kenneth Wong (Room V810)')"
+              aria-label="Notifications"
+              class="relative p-1.5 text-[#18181B] dark:text-[#E4E4E7] hover:text-[#D22630] transition-colors cursor-pointer"
+            >
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
+              </svg>
+              <span class="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-[#D22630]"></span>
+            </button>
+          </header>
+
+          <!-- Scrollable Screen Body Container -->
+          <main class="flex-1 overflow-y-auto tablet-scroll bg-white dark:bg-[#111318]">
+            <!-- ===================================================== -->
+            <!-- SCREEN 3: TABLET DASHBOARD                            -->
+            <!-- ===================================================== -->
+            <section id="screen-3" class="hidden p-7 space-y-6">
+              <!-- Top 3 Dark Charcoal KPI Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Card 1: Remaining Quota -->
+                <div class="bg-[#444444] dark:bg-[#1E2129] text-white rounded-2xl p-5 flex flex-col justify-between min-h-[155px] border border-black/5 dark:border-white/5">
+                  <div>
+                    <div class="text-[11px] font-bold tracking-wider uppercase text-white/85">REMAINING QUOTA</div>
+                    <div class="mt-2 flex items-baseline gap-1 tabular-nums">
+                      <span class="text-[34px] font-bold text-[#C4B5FD] leading-none">02</span>
+                      <span class="text-[16px] font-semibold text-white/70">/ 3</span>
+                    </div>
+                  </div>
+                  <div class="mt-4">
+                    <div class="w-full h-1.5 rounded-full bg-black/35 overflow-hidden mb-2.5">
+                      <div class="h-full w-1/3 rounded-full bg-[#D22630]"></div>
+                    </div>
+                    <div class="text-[11px] text-white/85">1 used this academic year</div>
+                    <div class="text-[11px] text-white/65">66.7% grant slots remaining</div>
+                  </div>
+                </div>
+
+                <!-- Card 2: Total Disbursed -->
+                <div class="bg-[#444444] dark:bg-[#1E2129] text-white rounded-2xl p-5 flex flex-col justify-between min-h-[155px] border border-black/5 dark:border-white/5">
+                  <div>
+                    <div class="text-[11px] font-bold tracking-wider uppercase text-white/85">TOTAL DISBURSED</div>
+                    <div class="mt-2 flex items-baseline gap-1 tabular-nums">
+                      <span class="text-[30px] font-bold text-[#34D399] leading-none">HK$ 2,000</span>
+                      <span class="text-[12px] text-white/60">.00</span>
+                    </div>
+                  </div>
+                  <div class="mt-3 space-y-1.5">
+                    <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#34D399]/15 border border-[#34D399]/30 text-[#6EE7B7] text-[10px] font-semibold">
+                      <span>✓ + HK$ 2,000 processed</span>
+                    </div>
+                    <div class="text-[11px] text-white/85">Hang Seng Bank (Direct Deposit)</div>
+                    <div class="text-[11px] font-semibold text-[#F87171]">Cutoff 15 Mar 2025</div>
+                  </div>
+                </div>
+
+                <!-- Card 3: Cap Pool -->
+                <div class="bg-[#444444] dark:bg-[#1E2129] text-white rounded-2xl p-5 flex flex-col justify-between min-h-[155px] border border-black/5 dark:border-white/5">
+                  <div>
+                    <div class="text-[11px] font-bold tracking-wider uppercase text-white/85">CAP POOL</div>
+                    <div class="mt-2 text-[32px] font-bold text-[#FDBA74] leading-none tabular-nums">64%</div>
+                  </div>
+                  <div class="text-[12px] font-medium text-white/90 tabular-nums">HK$10,000 cap</div>
+                </div>
+              </div>
+
+              <!-- Active Applications Header + Filter + + New Application CTA -->
+              <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <div class="flex items-center gap-3">
+                  <h2 class="text-[18px] font-bold tracking-tight text-[#111827] dark:text-white">Active Applications</h2>
+                  <span class="px-2.5 py-0.5 rounded-full bg-[#B30923] text-white text-[10px] font-semibold whitespace-nowrap">3 Entries</span>
+                </div>
+
+                <div class="flex items-center gap-2.5 flex-wrap">
+                  <!-- Status Filter Pills -->
+                  <div class="bg-[#333333] dark:bg-[#22252E] rounded-full p-1 flex items-center gap-1 text-[11px] font-semibold">
+                    <button type="button" data-filter="all" onclick="filterDashboardApps('all')" class="dash-filter-btn px-3 py-1 rounded-full bg-[#D22630] text-white transition-colors cursor-pointer whitespace-nowrap">All (3)</button>
+                    <button type="button" data-filter="pending" onclick="filterDashboardApps('pending')" class="dash-filter-btn px-3 py-1 rounded-full text-white/80 hover:text-white transition-colors cursor-pointer whitespace-nowrap">Pending (1)</button>
+                    <button type="button" data-filter="approved" onclick="filterDashboardApps('approved')" class="dash-filter-btn px-3 py-1 rounded-full text-white/80 hover:text-white transition-colors cursor-pointer whitespace-nowrap">Approved (1)</button>
+                    <button type="button" data-filter="draft" onclick="filterDashboardApps('draft')" class="dash-filter-btn px-3 py-1 rounded-full text-white/80 hover:text-white transition-colors cursor-pointer whitespace-nowrap">Drafts (1)</button>
+                  </div>
+
+                  <!-- Primary + New Application CTA (Explicit Screen 3 -> Screen 4 Trigger) -->
+                  <button
+                    type="button"
+                    id="dash-new-app-btn"
+                    onclick="navigateTo(4)"
+                    class="px-4 py-2 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[12px] font-bold shadow-sm transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    + New Application
+                  </button>
+                </div>
+              </div>
+
+              <!-- 2-Column Grid for Application Cards (Tablet-First Constraint) -->
+              <div id="dashboard-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Card 1: Pending Endorsement -->
+                <article
+                  data-status="pending"
+                  data-title="if design student award aurawear"
+                  class="dash-app-card bg-[#8C8C8C] dark:bg-[#252830] text-white rounded-2xl p-5 flex flex-col justify-between min-h-[168px]"
+                >
+                  <div>
+                    <div class="flex items-center gap-2 text-[11px]">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-[#18181B] font-bold whitespace-nowrap">
+                        <span class="text-[#D22630]">↻</span> Pending Endorsement
+                      </span>
+                      <span class="font-semibold text-white/90">Cat. A (Intl)</span>
+                    </div>
+                    <h3 class="mt-3 text-[19px] font-bold leading-snug">iF Design Student Award</h3>
+                    <p class="mt-0.5 text-[12px] text-white/85 truncate">Project "AuraWear" • Social Impact &amp; Accessibility</p>
+                  </div>
+
+                  <div class="mt-4 bg-[#6E6E6E] dark:bg-[#191B22] rounded-xl px-4 py-2.5 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-5 text-[11px] tabular-nums">
+                      <div>
+                        <div class="text-white/75 text-[10px]">Submitted</div>
+                        <div class="font-semibold">12 Feb 2025</div>
+                      </div>
+                      <div>
+                        <div class="text-white/75 text-[10px]">Grant Requested</div>
+                        <div class="font-bold text-[13px]">HK$ 3,200</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="navigateTo(9)"
+                      title="Track Application Status"
+                      class="w-8 h-8 rounded-lg bg-[#A50F24] hover:bg-[#D22630] text-white flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </article>
+
+                <!-- Card 2: Approved for Claim -->
+                <article
+                  data-status="approved"
+                  data-title="james dyson award aquafilter kinetic"
+                  class="dash-app-card bg-[#8C8C8C] dark:bg-[#252830] text-white rounded-2xl p-5 flex flex-col justify-between min-h-[168px]"
+                >
+                  <div>
+                    <div class="flex items-center gap-2 text-[11px]">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-[#18181B] font-bold whitespace-nowrap">
+                        <span class="text-[#0F6E6E]">✓</span> Approved for Claim
+                      </span>
+                      <span class="font-semibold text-white/90">Cat. A</span>
+                    </div>
+                    <h3 class="mt-3 text-[19px] font-bold leading-snug">James Dyson Award</h3>
+                    <p class="mt-0.5 text-[12px] text-white/85 truncate">Tangible Engineering • "AquaFilter Kinetic"</p>
+                  </div>
+
+                  <div class="mt-4 bg-[#6E6E6E] dark:bg-[#191B22] rounded-xl px-4 py-2.5 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-5 text-[11px] tabular-nums">
+                      <div>
+                        <div class="text-white/75 text-[10px]">Submitted</div>
+                        <div class="font-semibold">12 Feb 2025</div>
+                      </div>
+                      <div>
+                        <div class="text-white/75 text-[10px]">Approved Grant</div>
+                        <div class="font-bold text-[13px]">HK$ 1,000</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="navigateTo(10)"
+                      title="Proceed to Post-Approval Claim"
+                      class="w-8 h-8 rounded-lg bg-[#A50F24] hover:bg-[#D22630] text-white flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </article>
+
+                <!-- Card 3: Draft (60%) -->
+                <article
+                  data-status="draft"
+                  data-title="red dot design concept biomimicry mobility capsule"
+                  class="dash-app-card bg-[#8C8C8C] dark:bg-[#252830] text-white rounded-2xl p-5 flex flex-col justify-between min-h-[168px]"
+                >
+                  <div>
+                    <div class="flex items-center gap-2 text-[11px]">
+                      <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white text-[#18181B] font-bold whitespace-nowrap">
+                        <span class="text-[#D22630]">✎</span> Draft (60%)
+                      </span>
+                      <span class="font-semibold text-white/90">Cat. B</span>
+                    </div>
+                    <h3 class="mt-3 text-[19px] font-bold leading-snug">Red Dot: Design Concept</h3>
+                    <p class="mt-0.5 text-[12px] text-white/85 truncate">Biomimicry Mobility Capsule</p>
+                  </div>
+
+                  <div class="mt-4 bg-[#6E6E6E] dark:bg-[#191B22] rounded-xl px-4 py-2.5 flex items-center justify-between gap-2">
+                    <div class="flex items-center gap-5 text-[11px] tabular-nums">
+                      <div>
+                        <div class="text-white/75 text-[10px]">Submitted</div>
+                        <div class="font-semibold">12 Feb 2025</div>
+                      </div>
+                      <div>
+                        <div class="text-white/75 text-[10px]">Grant Requested</div>
+                        <div class="font-bold text-[13px]">HK$ 4,500</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="navigateTo(4)"
+                      title="Resume Draft Application"
+                      class="w-8 h-8 rounded-lg bg-[#A50F24] hover:bg-[#D22630] text-white flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+                    >
+                      <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                      </svg>
+                    </button>
+                  </div>
+                </article>
+              </div>
+
+              <!-- Tutor Pill Card -->
+              <div class="pt-4 flex justify-center">
+                <div class="inline-flex items-center gap-4 bg-[#A50F24] text-white rounded-full px-5 py-3 shadow-md">
+                  <div class="w-9 h-9 rounded-full bg-white text-[#A50F24] flex items-center justify-center shrink-0">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422A12.083 12.083 0 0112 21a12.083 12.083 0 01-6.16-10.422L12 14z"></path>
+                    </svg>
+                  </div>
+                  <div class="pr-2">
+                    <div class="text-[10px] font-semibold text-white/80">Designated Competition Tutor</div>
+                    <div class="text-[14px] font-bold leading-tight">Prof. Kenneth Wong</div>
+                    <div class="text-[11px] text-white/85">Jockey Club Tower • V810</div>
+                  </div>
+                  <button
+                    type="button"
+                    onclick="showToast('Message drafted to Prof. Kenneth Wong (kenneth.wong@polyu.edu.hk)')"
+                    aria-label="Email Tutor"
+                    class="w-9 h-9 rounded-full bg-white text-[#A50F24] hover:bg-white/90 flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+                  >
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 4: SELECT COMPETITION                          -->
+            <!-- ===================================================== -->
+            <section id="screen-4" class="hidden p-7 space-y-5">
+              <!-- Step Progress -->
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-bold mb-1.5">
+                  <span class="tracking-wider uppercase text-[#18181B] dark:text-white">STEP 1 OF 4</span>
+                  <span class="text-[#D22630]">25% Completed</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#27272A] dark:bg-white/15"></div>
+                  <div class="h-1 rounded-full bg-[#27272A] dark:bg-white/15"></div>
+                  <div class="h-1 rounded-full bg-[#27272A] dark:bg-white/15"></div>
+                </div>
+              </div>
+
+              <!-- Title & Pills -->
+              <div>
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <h1 class="text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Select Competition</h1>
+                  <span class="px-2.5 py-1 rounded-full bg-[#E4E4E7] dark:bg-[#27272A] text-[#27272A] dark:text-[#E4E4E7] text-[10px] font-bold">AY 2024/25 Catalog</span>
+                  <span class="px-2.5 py-1 rounded-full bg-[#A50F24] text-white text-[10px] font-bold">• 100% Matching Roster</span>
+                </div>
+                <p class="mt-2 text-[12px] leading-relaxed text-[#52525B] dark:text-[#A1A1AA] max-w-[680px]">
+                  Browse our pre-approved roster of Tier 1 &amp; Tier 2 design competitions. Subsidies cover 100% of registration fees, model fabrication, and presentation freight up to annual departmental quota caps.
+                </p>
+              </div>
+
+              <!-- 2-Column Grid for Competition Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Card 1 -->
+                <div
+                  data-comp-name="iF Design Student Award 2025"
+                  data-comp-url="https://ifdesign.com/en/if-design-student-award"
+                  onclick="selectCompetitionCard(this)"
+                  class="comp-card rounded-2xl p-5 flex flex-col justify-between min-h-[195px] cursor-pointer transition-all border border-transparent bg-[#E4E4E7] dark:bg-[#1E2129] text-[#18181B] dark:text-white"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 text-[10px] font-bold">
+                      <span class="comp-tier-pill px-2.5 py-0.5 rounded-full bg-[#9E0B22] text-white">Tier 1 • International</span>
+                      <span class="comp-loc-pill px-2.5 py-0.5 rounded-full bg-[#3F3F46] text-white">Hannover, DE</span>
+                    </div>
+                    <h3 class="mt-3 text-[18px] font-bold">iF Design Student Award 2025</h3>
+                    <p class="mt-1.5 text-[12px] opacity-85 leading-relaxed">
+                      Open to enrolled design students. 100% Entry Fee + Presentation Board shipping reimbursable
+                    </p>
+                    <p class="mt-2.5 text-[12px] font-bold">Max HK$3,500</p>
+                  </div>
+                  <div class="mt-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[10px] font-semibold">
+                      <span class="comp-tag-pill px-2.5 py-1 rounded-full bg-[#71717A] text-white">Product &amp; UI/UX</span>
+                      <span class="opacity-85">ifdesign.com ↗</span>
+                    </div>
+                    <span class="comp-check w-6 h-6 rounded-full bg-[#71717A] text-white flex items-center justify-center text-[11px] font-bold">✓</span>
+                  </div>
+                </div>
+
+                <!-- Card 2 (Default Selected to match flow into Red Dot) -->
+                <div
+                  data-comp-name="Red Dot Award: Design Concept 2025"
+                  data-comp-url="https://www.red-dot.org/design-concept-2025"
+                  onclick="selectCompetitionCard(this)"
+                  class="comp-card rounded-2xl p-5 flex flex-col justify-between min-h-[195px] cursor-pointer transition-all border border-transparent bg-[#A50F24] text-white"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 text-[10px] font-bold">
+                      <span class="comp-tier-pill px-2.5 py-0.5 rounded-full bg-white text-[#9E0B22]">Tier 1 • International</span>
+                      <span class="comp-loc-pill px-2.5 py-0.5 rounded-full bg-white text-[#18181B]">Singapore / Essen</span>
+                    </div>
+                    <h3 class="mt-3 text-[18px] font-bold">Red Dot Award: Design Concept</h3>
+                    <p class="mt-1.5 text-[12px] opacity-90 leading-relaxed">
+                      Worldwide recognition for breakthrough prototypes and emerging industrial concept designs. Full entry subsidy.
+                    </p>
+                  </div>
+                  <div class="mt-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[10px] font-semibold">
+                      <span class="comp-tag-pill px-2.5 py-1 rounded-full bg-white text-[#18181B]">Concept Design</span>
+                      <span class="opacity-90">red-dot.org ↗</span>
+                    </div>
+                    <span class="comp-check w-6 h-6 rounded-full bg-white/25 text-white flex items-center justify-center text-[11px] font-bold">✓</span>
+                  </div>
+                </div>
+
+                <!-- Card 3 -->
+                <div
+                  data-comp-name="James Dyson Award 2025"
+                  data-comp-url="https://www.jamesdysonaward.org"
+                  onclick="selectCompetitionCard(this)"
+                  class="comp-card rounded-2xl p-5 flex flex-col justify-between min-h-[195px] cursor-pointer transition-all border border-transparent bg-[#E4E4E7] dark:bg-[#1E2129] text-[#18181B] dark:text-white"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 text-[10px] font-bold">
+                      <span class="comp-tier-pill px-2.5 py-0.5 rounded-full bg-[#9E0B22] text-white">Tier 2 • Regional &amp; Global</span>
+                      <span class="comp-loc-pill px-2.5 py-0.5 rounded-full bg-[#3F3F46] text-white">Global Innovation</span>
+                    </div>
+                    <h3 class="mt-3 text-[18px] font-bold">James Dyson Award 2025</h3>
+                    <p class="mt-1.5 text-[12px] opacity-85 leading-relaxed">
+                      Engineering &amp; product design contest celebrating inventive solutions to global environmental problems.
+                    </p>
+                  </div>
+                  <div class="mt-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[10px] font-semibold">
+                      <span class="comp-tag-pill px-2.5 py-1 rounded-full bg-[#3F3F46] text-white">Tangible Design</span>
+                      <span class="opacity-85">jamesdysonaward.org ↗</span>
+                    </div>
+                    <span class="comp-check w-6 h-6 rounded-full bg-[#71717A] text-white flex items-center justify-center text-[11px] font-bold">✓</span>
+                  </div>
+                </div>
+
+                <!-- Card 4 -->
+                <div
+                  data-comp-name="HKDA Global Design Awards"
+                  data-comp-url="https://www.hkda.hk"
+                  onclick="selectCompetitionCard(this)"
+                  class="comp-card rounded-2xl p-5 flex flex-col justify-between min-h-[195px] cursor-pointer transition-all border border-transparent bg-[#E4E4E7] dark:bg-[#1E2129] text-[#18181B] dark:text-white"
+                >
+                  <div>
+                    <div class="flex items-center justify-between gap-2 text-[10px] font-bold">
+                      <span class="comp-tier-pill px-2.5 py-0.5 rounded-full bg-[#9E0B22] text-white">Tier 2 • Regional</span>
+                      <span class="comp-loc-pill px-2.5 py-0.5 rounded-full bg-[#3F3F46] text-white">Hong Kong SAR</span>
+                    </div>
+                    <h3 class="mt-3 text-[18px] font-bold">HKDA Global Design Awards</h3>
+                    <p class="mt-1.5 text-[12px] opacity-85 leading-relaxed">
+                      Premier Asia-Pacific multi-disciplinary design award organized by Hong Kong Designers Association.
+                    </p>
+                  </div>
+                  <div class="mt-4 flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[10px] font-semibold">
+                      <span class="comp-tag-pill px-2.5 py-1 rounded-full bg-[#3F3F46] text-white">Multi-Disciplinary</span>
+                      <span class="opacity-85">hkda.hk ↗</span>
+                    </div>
+                    <span class="comp-check w-6 h-6 rounded-full bg-[#71717A] text-white flex items-center justify-center text-[11px] font-bold">✓</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Footer Summary & CTA -->
+              <div class="pt-2 flex flex-col items-center gap-4">
+                <div class="flex flex-wrap items-center justify-center gap-3 text-[11px] font-semibold">
+                  <span class="inline-flex items-center gap-1.5 text-[#18181B] dark:text-[#E4E4E7]">
+                    <span class="w-2 h-2 rounded-full bg-[#9E0B22]"></span>
+                    <span id="selected-comp-label">1 of 4 Competitions Selected (Red Dot Award)</span>
+                  </span>
+                  <span class="text-[#A1A1AA]">|</span>
+                  <button type="button" onclick="showToast('Unlisted Competition Request form sent to SD General Office')" class="text-[#D22630] underline underline-offset-2 cursor-pointer">
+                    Can't find your competition? Request Unlisted Entry ↗
+                  </button>
+                </div>
+
+                <button
+                  type="button"
+                  onclick="navigateTo(5)"
+                  class="px-8 py-3 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                >
+                  <span>Confirm Selection</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 5: APPLICANT INFORMATION                       -->
+            <!-- ===================================================== -->
+            <section id="screen-5" class="hidden p-7 space-y-5">
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-bold mb-1.5">
+                  <span class="tracking-wider uppercase text-[#18181B] dark:text-white">STEP 2 OF 4</span>
+                  <span class="text-[#D22630]">50% Completed</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#27272A] dark:bg-white/15"></div>
+                  <div class="h-1 rounded-full bg-[#27272A] dark:bg-white/15"></div>
+                </div>
+              </div>
+
+              <div>
+                <h1 class="text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Applicant Information</h1>
+                <p class="mt-1.5 text-[12px] leading-relaxed text-[#52525B] dark:text-[#A1A1AA] max-w-[660px]">
+                  Browse our pre-approved roster of Tier 1 &amp; Tier 2 design competitions. Subsidies cover 100% of registration fees, model fabrication, and presentation freight up to annual departmental quota caps.
+                </p>
+              </div>
+
+              <!-- Verified NetID Banner -->
+              <div class="bg-[#E6F7F9] dark:bg-[#0D2B30] border border-[#BAE6FD]/60 dark:border-[#155E75] rounded-2xl p-4 flex flex-wrap items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-[#0F6E6E] text-white flex items-center justify-center shrink-0">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="text-[12px] font-bold text-[#0F6E6E] dark:text-[#5EEAD4]">
+                      Applicant Verified: Peter K. Chan (BA Design, Yr 3)
+                    </div>
+                    <div class="text-[11px] text-[#155E75] dark:text-[#99F6E4]">
+                      Eligible for <span class="font-bold">100% Tier 1 Competition Subsidy</span> (Maximum allocation HK$ 10,000 per academic calendar year).
+                    </div>
+                  </div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-white dark:bg-[#111318] text-[10px] font-semibold text-[#18181B] dark:text-[#E4E4E7] border border-black/5 dark:border-white/10 whitespace-nowrap">
+                  <span class="text-[#0F6E6E]">●</span> NetID SSO Synchronized • Active
+                </span>
+              </div>
+
+              <!-- Centered 2-Column Form Layout -->
+              <div class="max-w-[700px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                <!-- Left Column: Personal Details -->
+                <div class="space-y-3.5">
+                  <div class="text-[11px] font-bold tracking-wider uppercase text-[#18181B] dark:text-white">PERSONAL DETAILS</div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#52525B] dark:text-[#A1A1AA] mb-1.5">Salutation</div>
+                    <div class="grid grid-cols-3 gap-2">
+                      <button type="button" onclick="selectSalutation(this)" class="salutation-btn py-2 rounded-xl bg-[#9E0B22] text-white text-[12px] font-bold cursor-pointer">Mr.</button>
+                      <button type="button" onclick="selectSalutation(this)" class="salutation-btn py-2 rounded-xl bg-[#E4E4E7] dark:bg-[#23262F] text-[#52525B] dark:text-[#A1A1AA] text-[12px] font-semibold cursor-pointer">Ms.</button>
+                      <button type="button" onclick="selectSalutation(this)" class="salutation-btn py-2 rounded-xl bg-[#E4E4E7] dark:bg-[#23262F] text-[#52525B] dark:text-[#A1A1AA] text-[12px] font-semibold cursor-pointer">Mx.</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[11px] font-semibold mb-1">
+                      <span class="text-[#18181B] dark:text-white">Full Name (Official Registry)</span>
+                      <span class="text-[#71717A]">Locked</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px] font-semibold">
+                      <input id="input-fullname" type="text" value="Peter K. Chan" readonly class="bg-transparent w-full focus:outline-none text-[#18181B] dark:text-white" />
+                      <svg class="w-4 h-4 text-[#52525B] dark:text-[#A1A1AA] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[11px] font-semibold mb-1">
+                      <span class="text-[#18181B] dark:text-white">Student ID / NetID</span>
+                      <span class="text-[#71717A]">Verified Registry</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px] font-mono font-medium">
+                      <span>21088492D</span>
+                      <svg class="w-4 h-4 text-[#0F6E6E] dark:text-[#5EEAD4] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[11px] font-semibold mb-1">
+                      <span class="text-[#18181B] dark:text-white">Institutional Email</span>
+                      <span class="text-[#71717A]">PolyU Connect</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px] font-medium">
+                      <span class="truncate">peter.k.chan@connect.polyu.hk</span>
+                      <svg class="w-4 h-4 text-[#52525B] dark:text-[#A1A1AA] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[11px] font-semibold mb-1">
+                      <span class="text-[#18181B] dark:text-white">Mobile Contact Number</span>
+                      <span class="text-[#D22630]">Editable for SMS</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px]">
+                      <span class="text-[#52525B] dark:text-[#A1A1AA] font-mono">+852 |</span>
+                      <input type="tel" value="9123 4567" class="bg-transparent font-mono font-semibold text-[#18181B] dark:text-white w-full focus:outline-none" />
+                      <svg class="w-3.5 h-3.5 text-[#52525B] dark:text-[#A1A1AA] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H7v-3.414a2 2 0 01.586-1.414z"></path>
+                      </svg>
+                    </div>
+                    <p class="mt-1.5 text-[10px] leading-relaxed text-[#71717A] dark:text-[#A1A1AA]">
+                      SMS notifications, faculty endorsements, and subsidy milestone vouchers will be dispatched to this number.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Right Column: Academic Info -->
+                <div class="space-y-3.5">
+                  <div class="flex justify-between items-center text-[11px] font-bold tracking-wider uppercase">
+                    <span class="text-[#18181B] dark:text-white">ACADEMIC INFO</span>
+                    <span class="text-[#52525B] dark:text-[#A1A1AA]">AY 2024 / 2025</span>
+                  </div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">Current Level of Study</div>
+                    <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-3">
+                      <select class="w-full bg-transparent text-[12px] font-bold text-[#18181B] dark:text-white focus:outline-none cursor-pointer">
+                        <option>Year 3 (Enrolled Full-Time)</option>
+                        <option>Year 4 (Enrolled Full-Time)</option>
+                        <option>Year 2 (Enrolled Full-Time)</option>
+                      </select>
+                      <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA] mt-0.5">Eligible for AY 2024/25 Grant Cycle</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">Programme &amp; Specialism</div>
+                    <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-3">
+                      <select class="w-full bg-transparent text-[12px] font-bold text-[#18181B] dark:text-white focus:outline-none cursor-pointer">
+                        <option>BA (Hons) in Interaction Design</option>
+                        <option>BA (Hons) in Product Design</option>
+                        <option>BA (Hons) in Communication Design</option>
+                      </select>
+                      <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA] mt-0.5">School of Design • Dept. of Industrial &amp; Product Design</div>
+                    </div>
+                  </div>
+
+                  <div class="bg-[#A50F24] text-white rounded-2xl p-4 space-y-1.5 mt-4 shadow-sm">
+                    <div class="flex items-center gap-2 text-[12px] font-bold">
+                      <svg class="w-4 h-4 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                      </svg>
+                      <span>Assigned Faculty Advisor</span>
+                    </div>
+                    <div class="text-[12px] font-medium text-white/95">
+                      Prof. Kenneth Wong (Room V810, Jockey Club Innovation Tower)
+                    </div>
+                    <div class="text-[11px] text-white/80">
+                      Advisor endorsement will be routed automatically upon submission.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 flex justify-center">
+                <button
+                  type="button"
+                  onclick="navigateTo(6)"
+                  class="px-8 py-3 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                >
+                  <span>Save &amp; Next</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 6: PROJECT DETAILS                             -->
+            <!-- ===================================================== -->
+            <section id="screen-6" class="hidden p-7 space-y-5">
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-bold mb-1.5">
+                  <span class="tracking-wider uppercase text-[#18181B] dark:text-white">STEP 3 OF 4</span>
+                  <span class="text-[#D22630]">75% Completed</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#27272A] dark:bg-white/15"></div>
+                </div>
+              </div>
+
+              <div>
+                <h1 class="text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Project Details and Competition/Award</h1>
+                <p class="mt-1.5 text-[12px] leading-relaxed text-[#52525B] dark:text-[#A1A1AA] max-w-[660px]">
+                  Provide information about the design project submitted to the competition. Details must match the official competition entry dossier for faculty verification and reimbursement auditing.
+                </p>
+              </div>
+
+              <!-- Centered 2-Column Form Layout -->
+              <div class="max-w-[700px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                <!-- Left Column: Project Details -->
+                <div class="space-y-3.5">
+                  <div class="flex justify-between items-center text-[11px]">
+                    <span class="font-bold tracking-wider uppercase text-[#18181B] dark:text-white">PROJECT DETAILS</span>
+                    <span class="font-semibold text-[#52525B] dark:text-[#A1A1AA]">Grant Tier A eligible</span>
+                  </div>
+
+                  <div>
+                    <label for="input-project-title" class="block text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">Project Title</label>
+                    <div class="flex items-center bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px]">
+                      <input
+                        id="input-project-title"
+                        type="text"
+                        value="AeroWeave Smart Orthosis"
+                        oninput="syncApplicationData()"
+                        class="bg-transparent font-semibold text-[#18181B] dark:text-white w-full focus:outline-none"
+                      />
+                      <svg class="w-3.5 h-3.5 text-[#52525B] dark:text-[#A1A1AA] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536M9 13l6.586-6.586a2 2 0 112.828 2.828L11.828 15.828a2 2 0 01-1.414.586H7v-3.414a2 2 0 01.586-1.414z"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <!-- Group Project Toggle -->
+                  <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+                    <div>
+                      <div class="text-[12px] font-bold text-[#18181B] dark:text-white">Is it a Group Project?</div>
+                      <div class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">Individual student submission</div>
+                    </div>
+                    <div class="bg-[#8C8C8C] dark:bg-[#111318] rounded-xl p-1 flex items-center text-[11px] font-bold shrink-0">
+                      <button type="button" onclick="toggleYesNo(this, 'group', 'Yes')" class="group-toggle px-3 py-1 rounded-lg text-white/85 cursor-pointer">Yes</button>
+                      <button type="button" onclick="toggleYesNo(this, 'group', 'No')" class="group-toggle px-3 py-1 rounded-lg bg-[#9E0B22] text-white cursor-pointer">No</button>
+                    </div>
+                  </div>
+
+                  <!-- Coursework Toggle -->
+                  <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-3 flex items-center justify-between gap-3">
+                    <div>
+                      <div class="text-[12px] font-bold text-[#18181B] dark:text-white">Is it a Coursework?</div>
+                      <div class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">Curriculum module project</div>
+                    </div>
+                    <div class="bg-[#8C8C8C] dark:bg-[#111318] rounded-xl p-1 flex items-center text-[11px] font-bold shrink-0">
+                      <button type="button" onclick="toggleYesNo(this, 'coursework', 'Yes')" class="coursework-toggle px-3 py-1 rounded-lg bg-[#9E0B22] text-white cursor-pointer">Yes</button>
+                      <button type="button" onclick="toggleYesNo(this, 'coursework', 'No')" class="coursework-toggle px-3 py-1 rounded-lg text-white/85 cursor-pointer">No</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">Course Name &amp; Assigned Tutor</div>
+                    <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-3 flex items-center justify-between gap-3">
+                      <div class="flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-full bg-[#9E0B22] text-white flex items-center justify-center shrink-0">
+                          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"></path>
+                          </svg>
+                        </div>
+                        <div>
+                          <div class="text-[12px] font-bold text-[#18181B] dark:text-white">SD3781 — Interface Design</div>
+                          <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">Tutor: Prof. John Doe (School of Design)</div>
+                        </div>
+                      </div>
+                      <span class="w-5 h-5 rounded-full bg-[#9E0B22] text-white flex items-center justify-center text-[10px] font-bold shrink-0">✓</span>
+                    </div>
+                  </div>
+
+                  <div class="bg-[#A50F24] text-white rounded-2xl p-4 flex items-center gap-3 shadow-sm">
+                    <span class="w-6 h-6 rounded-full border border-white/60 flex items-center justify-center text-[11px] font-bold shrink-0">i</span>
+                    <div class="text-[11px] leading-snug">
+                      <div class="font-bold">PolyU Student Subsidy Fund cap:</div>
+                      <div class="text-white/90">HK$ 15,000 for Tier A international design competitions.</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Column: Competition Details -->
+                <div class="space-y-3.5">
+                  <div class="text-[11px] font-bold tracking-wider uppercase text-[#18181B] dark:text-white">COMPETITION DETAILS</div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">Competition Name</div>
+                    <div class="flex items-center justify-between bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px] font-bold">
+                      <span id="proj-comp-name" class="truncate">Red Dot Award: Design Concept 2025</span>
+                      <svg class="w-4 h-4 text-[#52525B] dark:text-[#A1A1AA] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="input-comp-url" class="block text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">
+                      Official Competition URL <span class="text-[#D22630]">*</span>
+                    </label>
+                    <div class="flex items-center bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px]">
+                      <input
+                        id="input-comp-url"
+                        type="url"
+                        value="https://www.red-dot.org/design-concept-2025"
+                        class="bg-transparent font-medium text-[#18181B] dark:text-white w-full focus:outline-none"
+                      />
+                      <svg class="w-3.5 h-3.5 text-[#52525B] dark:text-[#A1A1AA] shrink-0 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">
+                      Competition Category <span class="text-[#D22630]">*</span>
+                    </div>
+                    <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5">
+                      <select
+                        id="input-comp-category"
+                        onchange="syncApplicationData()"
+                        class="w-full bg-transparent text-[12px] font-bold text-[#18181B] dark:text-white focus:outline-none cursor-pointer"
+                      >
+                        <option value="Product Design & Assistive Tech">Product Design (Concept &amp; Prototype)</option>
+                        <option value="Interaction & Spatial UX">Interaction &amp; Spatial UX</option>
+                        <option value="Sustainable Packaging & Material">Sustainable Packaging &amp; Material</option>
+                      </select>
+                      <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA] mt-0.5">Tier-1 Qualified Design Tier</div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">
+                      Recognition Level <span class="text-[#D22630]">*</span>
+                    </div>
+                    <div class="grid grid-cols-3 gap-2 text-[11px] font-bold">
+                      <button type="button" onclick="selectRecognitionLevel(this, 'Local')" class="recog-btn py-2.5 rounded-xl bg-[#E4E4E7] dark:bg-[#23262F] text-[#52525B] dark:text-[#A1A1AA] cursor-pointer">Local</button>
+                      <button type="button" onclick="selectRecognitionLevel(this, 'National')" class="recog-btn py-2.5 rounded-xl bg-[#E4E4E7] dark:bg-[#23262F] text-[#52525B] dark:text-[#A1A1AA] cursor-pointer">National</button>
+                      <button type="button" onclick="selectRecognitionLevel(this, 'International')" class="recog-btn py-2.5 rounded-xl bg-[#9E0B22] text-white cursor-pointer">International</button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1">
+                      Expected Result Announcement Date <span class="text-[#D22630]">*</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-3.5 py-2.5 text-[12px] font-medium">
+                      <div class="flex items-center gap-2">
+                        <svg class="w-4 h-4 text-[#52525B] dark:text-[#A1A1AA]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                          <rect x="3" y="4" width="18" height="18" rx="2"></rect>
+                          <path d="M16 2v4M8 2v4M3 10h18"></path>
+                        </svg>
+                        <input type="text" value="15 / 08 / 2025" class="bg-transparent w-28 focus:outline-none font-mono" />
+                      </div>
+                      <span class="text-[11px] font-semibold text-[#52525B] dark:text-[#A1A1AA]">Q3 2025</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 flex justify-center">
+                <button
+                  type="button"
+                  onclick="navigateTo(7)"
+                  class="px-8 py-3 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                >
+                  <span>Save &amp; Next</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 7: CLAIM INFO                                  -->
+            <!-- ===================================================== -->
+            <section id="screen-7" class="hidden p-7 space-y-5">
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-bold mb-1.5">
+                  <span class="tracking-wider uppercase text-[#18181B] dark:text-white">STEP 4 OF 4</span>
+                  <span class="text-[#D22630]">100% Completed</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                </div>
+              </div>
+
+              <div>
+                <h1 class="text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Claim Information</h1>
+                <p class="mt-1.5 text-[12px] leading-relaxed text-[#52525B] dark:text-[#A1A1AA]">
+                  Specify eligible costs and provide digital authorization for the reimbursement.
+                </p>
+              </div>
+
+              <!-- Centered 2-Column Layout -->
+              <div class="max-w-[720px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                <!-- Left Column: Declaration, Signature & Docs -->
+                <div class="space-y-4">
+                  <div class="text-[11px] font-bold tracking-wider uppercase text-[#18181B] dark:text-white">DECLARATION &amp; SIGNATURE</div>
+
+                  <label class="flex items-start gap-3 bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl p-3.5 cursor-pointer">
+                    <input id="claim-declaration-check" type="checkbox" checked class="mt-0.5 w-4 h-4 rounded accent-[#9E0B22] shrink-0" />
+                    <span class="text-[11px] leading-relaxed text-[#18181B] dark:text-[#E4E4E7]">
+                      I declare this entry is not supported by any other financial scheme(s) or external commercial funding, and all expenditure receipts submitted are authentic.
+                    </span>
+                  </label>
+
+                  <div>
+                    <div class="text-[11px] font-semibold text-[#18181B] dark:text-white mb-1.5">Student Applicant Digital Signature</div>
+                    <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl p-4">
+                      <div class="text-[10px] font-bold tracking-wider uppercase text-[#52525B] dark:text-[#A1A1AA]">
+                        <span class="text-[#D22630]">•</span> VERIFIED KEY: POLYU-HK-8492
+                      </div>
+                      <div id="digital-signature-display" class="my-3 text-center font-serif italic text-[24px] font-semibold text-[#111827] dark:text-white select-none">
+                        Peter K.C.
+                      </div>
+                      <div class="flex items-center justify-between text-[10px] text-[#52525B] dark:text-[#A1A1AA]">
+                        <span>Signed: 28 Feb 2025</span>
+                        <button type="button" onclick="resignSignature()" class="font-semibold text-[#18181B] dark:text-white underline cursor-pointer">
+                          ↻ Clear &amp; Resign
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between items-center text-[11px] mb-1.5">
+                      <span class="font-bold tracking-wider uppercase text-[#18181B] dark:text-white">SUPPORTING DOCUMENTS</span>
+                      <span class="font-semibold text-[#52525B] dark:text-[#A1A1AA]">2 files attached</span>
+                    </div>
+                    <div class="space-y-2">
+                      <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl p-3 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                          <div class="w-8 h-8 rounded-lg bg-[#0F6E6E] text-white flex items-center justify-center shrink-0 text-[11px] font-bold">PDF</div>
+                          <div class="min-w-0">
+                            <div class="text-[11px] font-bold truncate">Receipt_RedDot.pdf</div>
+                            <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">1.4 MB • Official Receipt • Verified</div>
+                          </div>
+                        </div>
+                        <span class="text-[#18181B] dark:text-white text-xs font-bold">✓</span>
+                      </div>
+                      <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl p-3 flex items-center justify-between gap-3">
+                        <div class="flex items-center gap-3 min-w-0">
+                          <div class="w-8 h-8 rounded-lg bg-[#0F6E6E] text-white flex items-center justify-center shrink-0 text-[11px] font-bold">PDF</div>
+                          <div class="min-w-0">
+                            <div class="text-[11px] font-bold truncate">freight_dhl_slip_berlin.pdf</div>
+                            <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">840 KB • Courier Invoice • Verified</div>
+                          </div>
+                        </div>
+                        <span class="text-[#18181B] dark:text-white text-xs font-bold">✓</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Project Entry Mini Card -->
+                  <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl p-3 flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-lg bg-white dark:bg-[#111318] flex items-center justify-center shrink-0 border border-black/10 dark:border-white/10 overflow-hidden">
+                      <svg viewBox="0 0 48 48" class="w-10 h-10">
+                        <rect width="48" height="48" rx="6" fill="#F4F4F5" />
+                        <path d="M12 32 C16 18, 30 14, 36 22 C30 28, 22 36, 12 32 Z" fill="#D22630" opacity="0.85" />
+                        <circle cx="26" cy="21" r="4" fill="#18181B" />
+                      </svg>
+                    </div>
+                    <div class="min-w-0">
+                      <div class="text-[10px] font-bold uppercase text-[#52525B] dark:text-[#A1A1AA]">PROJECT ENTRY #2025-081</div>
+                      <div class="sync-project-title text-[12px] font-bold truncate">AeroWeave Smart Orthosis</div>
+                      <div class="sync-comp-name text-[10px] text-[#52525B] dark:text-[#A1A1AA] truncate">Red Dot Award: Design Concept 2025</div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Column: Claim Amounts & Shipping Validation -->
+                <div class="space-y-4">
+                  <div class="flex justify-between items-center text-[11px]">
+                    <span class="font-bold tracking-wider uppercase text-[#18181B] dark:text-white">CLAIM AMOUNTS</span>
+                    <span class="font-semibold text-[#52525B] dark:text-[#A1A1AA]">PolyU Subsidy Cap Check</span>
+                  </div>
+
+                  <div>
+                    <label for="input-entrance-fee" class="block text-[11px] font-semibold text-[#18181B] dark:text-white mb-1.5">
+                      Entrance / Registration Fee
+                    </label>
+                    <div class="flex items-center justify-between bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-3.5">
+                      <span class="text-[12px] font-bold text-[#52525B] dark:text-[#A1A1AA]">HKD</span>
+                      <input
+                        id="input-entrance-fee"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value="3200.00"
+                        oninput="recalculateClaimTotal()"
+                        class="bg-transparent text-right text-[18px] font-bold tabular-nums text-[#18181B] dark:text-white w-40 focus:outline-none"
+                      />
+                    </div>
+                    <div class="mt-1.5 flex items-center gap-1.5 text-[10px] text-[#0F6E6E] dark:text-[#5EEAD4]">
+                      <span>✓</span>
+                      <span>Direct reimbursement eligible. Entrance fee has no cap.</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label for="input-shipping-fee" class="block text-[11px] font-semibold text-[#18181B] dark:text-white mb-1.5">
+                      Shipping &amp; Prototype Freight
+                    </label>
+                    <div
+                      id="shipping-fee-wrapper"
+                      class="flex items-center justify-between bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-3.5 border-2 border-transparent transition-colors"
+                    >
+                      <span class="text-[12px] font-bold text-[#52525B] dark:text-[#A1A1AA]">HKD</span>
+                      <input
+                        id="input-shipping-fee"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        value="850.00"
+                        oninput="validateAndRecalculateShipping()"
+                        class="bg-transparent text-right text-[18px] font-bold tabular-nums text-[#18181B] dark:text-white w-40 focus:outline-none"
+                      />
+                    </div>
+                    <div id="shipping-allowance-hint" class="mt-1.5 flex items-center gap-1.5 text-[10px] text-[#0F6E6E] dark:text-[#5EEAD4]">
+                      <span>✓</span>
+                      <span>Max allowance: HK$1,000.</span>
+                    </div>
+
+                    <!-- IMPORTANT VALIDATION ERROR BOX (Shown when Shipping Fee > 1000) -->
+                    <div
+                      id="shipping-error-msg"
+                      role="alert"
+                      class="hidden mt-2 p-3 rounded-xl bg-red-50 dark:bg-red-950/60 border border-red-500 text-red-700 dark:text-red-300 text-[11px] font-semibold flex items-start gap-2"
+                    >
+                      <svg class="w-4 h-4 text-red-600 dark:text-red-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"></path>
+                      </svg>
+                      <span>
+                        Shipping Fee exceeds the HK$ 1,000.00 maximum allowance. Submission is blocked until the freight amount is HK$ 1,000.00 or less.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Total Claim Crimson Card -->
+                  <div class="bg-[#A50F24] text-white rounded-2xl p-5 flex items-center justify-between gap-3 shadow-md">
+                    <div>
+                      <div class="text-[10px] font-bold tracking-wider uppercase text-white/80">TOTAL CLAIM VALUE</div>
+                      <div id="claim-total-display" class="mt-1 text-[22px] font-extrabold tabular-nums">HK$ 4,050.00</div>
+                    </div>
+                    <span class="px-3 py-1 rounded-full bg-white/15 text-[10px] font-semibold whitespace-nowrap">
+                      ⚙ 100% Reimbursable
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="pt-2 flex justify-center">
+                <button
+                  type="button"
+                  id="btn-submit-claim-info"
+                  onclick="submitClaimInfo()"
+                  class="px-8 py-3 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                >
+                  <span>Submit Application</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 8: REVIEW APPLICATION                          -->
+            <!-- ===================================================== -->
+            <section id="screen-8" class="hidden p-7 space-y-5">
+              <div>
+                <div class="flex items-center justify-between text-[11px] font-bold mb-1.5">
+                  <span class="tracking-wider uppercase text-[#18181B] dark:text-white">STEP 4 OF 4</span>
+                  <span class="text-[#D22630]">100% Completed</span>
+                </div>
+                <div class="grid grid-cols-4 gap-2">
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                  <div class="h-1 rounded-full bg-[#D22630]"></div>
+                </div>
+              </div>
+
+              <div>
+                <h1 class="text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Review Application</h1>
+                <p class="mt-1.5 text-[12px] leading-relaxed text-[#52525B] dark:text-[#A1A1AA] max-w-[680px]">
+                  Please carefully review all the dossier fields and attached evidentiary claims below before finalizing your submission. Once lodged, records lock automatically for departmental review and cannot be modified.
+                </p>
+              </div>
+
+              <!-- 2x2 Summary Dossier Grid -->
+              <div class="max-w-[760px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                <!-- Block 1: Applicant Details -->
+                <div class="space-y-3">
+                  <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-2.5 flex items-center justify-between">
+                    <span class="text-[12px] font-extrabold tracking-wide uppercase flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#D22630]"></span>
+                      1. APPLICANT DETAILS
+                    </span>
+                    <button type="button" onclick="navigateTo(5)" class="text-[11px] font-bold text-[#D22630] hover:underline cursor-pointer">✎ Edit</button>
+                  </div>
+                  <div class="px-1 space-y-1">
+                    <div class="text-[16px] font-extrabold text-[#111827] dark:text-white">Peter K. Chan</div>
+                    <div class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">Student ID: 21088492D</div>
+                    <div class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">BA(Hons) in Interaction Design</div>
+                    <div class="pt-1.5 flex flex-wrap gap-2 text-[10px] font-semibold">
+                      <span class="px-2.5 py-0.5 rounded-full bg-[#E4E4E7] dark:bg-[#27272A] text-[#9E0B22] dark:text-[#FCA5A5]">Enrolled UG • Year 3</span>
+                      <span class="px-2.5 py-0.5 rounded-full bg-[#E4E4E7] dark:bg-[#27272A] text-[#18181B] dark:text-[#E4E4E7]">School of Design</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Block 2: Competition & Project Details -->
+                <div class="space-y-3">
+                  <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-2.5 flex items-center justify-between">
+                    <span class="text-[12px] font-extrabold tracking-wide uppercase flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#D22630]"></span>
+                      2. COMPETITION &amp; PROJECT DETAILS
+                    </span>
+                    <button type="button" onclick="navigateTo(6)" class="text-[11px] font-bold text-[#D22630] hover:underline cursor-pointer">✎ Edit</button>
+                  </div>
+                  <div class="px-1 space-y-1">
+                    <div class="sync-comp-name text-[14px] font-extrabold text-[#111827] dark:text-white">Red Dot Award: Design Concept 2025</div>
+                    <div class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">Project: <span class="sync-project-title font-semibold text-[#18181B] dark:text-white">AeroWeave Smart Orthosis</span></div>
+                    <div class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">Category: <span id="review-category">Product Design &amp; Assistive Tech</span></div>
+                    <div class="pt-1.5 flex flex-wrap items-center gap-2 text-[10px] font-semibold">
+                      <span id="review-recog-level" class="px-2.5 py-0.5 rounded-full bg-[#E4E4E7] dark:bg-[#27272A] text-[#9E0B22] dark:text-[#FCA5A5]">International Recognition</span>
+                      <span class="text-[#18181B] dark:text-[#E4E4E7]">Coursework: SD3781</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Block 3: Claim Breakdown -->
+                <div class="space-y-3">
+                  <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-2.5 flex items-center justify-between">
+                    <span class="text-[12px] font-extrabold tracking-wide uppercase flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#D22630]"></span>
+                      3. CLAIM BREAKDOWN
+                    </span>
+                    <button type="button" onclick="navigateTo(7)" class="text-[11px] font-bold text-[#D22630] hover:underline cursor-pointer">✎ Edit</button>
+                  </div>
+                  <div class="px-1 space-y-2 text-[12px]">
+                    <div class="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-1.5">
+                      <span class="font-bold tracking-wide uppercase text-[11px]">CLAIM SUMMARY</span>
+                      <button type="button" onclick="navigateTo(7)" class="text-[11px] font-bold text-[#D22630] cursor-pointer">Edit ✎</button>
+                    </div>
+                    <div class="flex justify-between text-[#52525B] dark:text-[#A1A1AA]">
+                      <span>Entrance Fee</span>
+                      <span id="review-entrance-fee" class="font-semibold text-[#18181B] dark:text-white tabular-nums">HKD 3,200.00</span>
+                    </div>
+                    <div class="flex justify-between text-[#52525B] dark:text-[#A1A1AA] border-b border-black/10 dark:border-white/10 pb-2">
+                      <span>Shipping Fee</span>
+                      <span id="review-shipping-fee" class="font-semibold text-[#18181B] dark:text-white tabular-nums">HKD 850.00</span>
+                    </div>
+                    <div class="flex justify-between items-center pt-0.5">
+                      <span class="font-extrabold">TOTAL CLAIM</span>
+                      <span id="review-total-claim" class="text-[17px] font-extrabold text-[#B30923] dark:text-[#F87171] tabular-nums">HKD 4,050.00</span>
+                    </div>
+                    <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-lg px-3 py-1.5 text-[11px] font-semibold flex items-center gap-2">
+                      <span>✓</span>
+                      <span>100% Reimbursable Submission</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Block 4: Documents & Signature -->
+                <div class="space-y-3">
+                  <div class="bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl px-4 py-2.5 flex items-center justify-between">
+                    <span class="text-[12px] font-extrabold tracking-wide uppercase flex items-center gap-2">
+                      <span class="w-1.5 h-1.5 rounded-full bg-[#D22630]"></span>
+                      4. DOCUMENTS &amp; SIGNATURE
+                    </span>
+                    <button type="button" onclick="navigateTo(7)" class="text-[11px] font-bold text-[#D22630] hover:underline cursor-pointer">✎ Edit</button>
+                  </div>
+                  <div class="px-1 space-y-2.5 text-[12px]">
+                    <div class="flex items-center justify-between border-b border-black/10 dark:border-white/10 pb-1.5">
+                      <span class="font-bold tracking-wide uppercase text-[11px]">DOCUMENTS &amp; SIGNATURE</span>
+                      <button type="button" onclick="navigateTo(7)" class="text-[11px] font-bold text-[#D22630] cursor-pointer">Edit ✎</button>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px]">
+                      <span class="font-medium">Receipt_RedDot.pdf</span>
+                      <span class="text-[#9E0B22] dark:text-[#FCA5A5] font-bold">✓ Verified</span>
+                    </div>
+                    <div class="flex items-center justify-between text-[11px] border-b border-black/10 dark:border-white/10 pb-2">
+                      <span class="font-medium">freight_dhl_slip.pdf</span>
+                      <span class="text-[#9E0B22] dark:text-[#FCA5A5] font-bold">✓ Verified</span>
+                    </div>
+                    <div class="flex items-center justify-between gap-2 pt-1">
+                      <div class="flex items-center gap-2.5">
+                        <span class="w-7 h-7 rounded-full bg-[#9E0B22] text-white flex items-center justify-center text-[11px] font-bold shrink-0">✍</span>
+                        <div>
+                          <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">Digital Sign-off</div>
+                          <div class="text-[11px] font-bold">Signed by Peter K.C. on 28 Feb 2025</div>
+                        </div>
+                      </div>
+                      <span class="px-2 py-0.5 rounded bg-[#E4E4E7] dark:bg-[#27272A] text-[9px] font-mono font-bold">PKC-VERIFIED</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Confirmation Checkbox -->
+              <div class="max-w-[760px] mx-auto pt-1">
+                <label class="inline-flex items-start gap-3 bg-[#E4E4E7] dark:bg-[#23262F] rounded-xl p-3.5 max-w-[360px] cursor-pointer">
+                  <input type="checkbox" checked class="mt-0.5 w-4 h-4 rounded accent-[#9E0B22] shrink-0" />
+                  <span class="text-[11px] leading-relaxed text-[#18181B] dark:text-[#E4E4E7]">
+                    I confirm all information is accurate and understand that false claims will result in cancellation of the subsidy.
+                  </span>
+                </label>
+              </div>
+
+              <div class="pt-1 flex justify-center">
+                <button
+                  type="button"
+                  onclick="navigateTo(9)"
+                  class="px-8 py-3 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                >
+                  <span>Confirm &amp; Submit</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 9: STATUS TRACKER                              -->
+            <!-- ===================================================== -->
+            <section id="screen-9" class="hidden p-7 space-y-6">
+              <div>
+                <div class="text-[11px] font-semibold text-[#52525B] dark:text-[#A1A1AA]">
+                  <button type="button" onclick="navigateTo(3)" class="hover:underline cursor-pointer">Dashboard</button>
+                  <span class="mx-1">›</span>
+                  <span>My Applications</span>
+                  <span class="mx-1">›</span>
+                  <span class="text-[#D22630] font-bold">Status Tracker</span>
+                </div>
+                <h1 class="mt-1 text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Application Status</h1>
+                <p class="mt-1 text-[12px] text-[#52525B] dark:text-[#A1A1AA]">
+                  Track the progress of your subsidy application in real time across academic review stages.
+                </p>
+              </div>
+
+              <!-- Submission Success Banner -->
+              <div class="bg-[#EAEAEA] dark:bg-[#1E2129] border-l-4 border-[#0F6E6E] rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
+                <div class="flex items-start gap-3.5">
+                  <div class="w-10 h-10 rounded-full bg-[#99F6E4]/60 dark:bg-[#0F6E6E]/40 text-[#0F6E6E] dark:text-[#5EEAD4] flex items-center justify-center shrink-0 mt-0.5">
+                    <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                  <div>
+                    <div class="flex flex-wrap items-center gap-2">
+                      <h2 class="text-[18px] font-extrabold text-[#111827] dark:text-white">Application Submitted Successfully!</h2>
+                      <span class="px-2.5 py-0.5 rounded-full bg-white dark:bg-[#111318] text-[#0F6E6E] dark:text-[#5EEAD4] text-[10px] font-bold border border-[#0F6E6E]/20">
+                        ⚙ LOGGED IN REGISTRY
+                      </span>
+                    </div>
+                    <p class="mt-1 text-[12px] text-[#3F3F46] dark:text-[#D4D4D8]">
+                      Your funding claim for <span class="sync-comp-name font-bold text-[#D22630]">Red Dot Award: Design Concept 2025</span> has been registered into the Academic Registry workflow.
+                    </p>
+                    <div class="mt-2.5 flex flex-wrap items-center gap-2 text-[10px] font-bold">
+                      <span class="px-2.5 py-1 rounded-full bg-white dark:bg-[#111318] text-[#18181B] dark:text-white font-mono">
+                        SUBMISSION ID <span class="text-[#D22630]">#SUB-2025-089</span>
+                      </span>
+                      <span class="px-2.5 py-1 rounded-full bg-white dark:bg-[#111318] text-[#52525B] dark:text-[#A1A1AA]">
+                        🕒 28 Feb 2025, 14:45 HKT
+                      </span>
+                      <span class="px-2.5 py-1 rounded-full bg-[#FEE2E2] dark:bg-[#450A0A] text-[#D22630] dark:text-[#FCA5A5]">
+                        • Status: Pending Endorsement
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onclick="showToast('Submission Slip #SUB-2025-089 ready for printing')"
+                  class="px-4 py-2 rounded-xl bg-white dark:bg-[#111318] text-[#18181B] dark:text-white border border-black/10 dark:border-white/10 text-[11px] font-bold hover:bg-black/5 transition-colors cursor-pointer whitespace-nowrap"
+                >
+                  🖨 Print Submission Slips
+                </button>
+              </div>
+
+              <!-- Stage Milestone Stepper -->
+              <div class="space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-2 text-[11px]">
+                  <div class="flex items-center gap-2">
+                    <span class="font-extrabold tracking-wider uppercase text-[#18181B] dark:text-white">STAGE MILESTONE PROCESS</span>
+                    <span class="px-2.5 py-0.5 rounded-full bg-[#CCFBF1] dark:bg-[#134E4A] text-[#0F6E6E] dark:text-[#5EEAD4] font-bold text-[10px]">Step 2 of 4 Active</span>
+                  </div>
+                  <span class="text-[#52525B] dark:text-[#A1A1AA]">🕒 SLA Target: 8 Business Days Total</span>
+                </div>
+
+                <div class="relative grid grid-cols-2 md:grid-cols-4 gap-4 pt-2">
+                  <!-- Step 1 -->
+                  <div class="text-center space-y-1.5">
+                    <div class="mx-auto w-9 h-9 rounded-full bg-[#0F6E6E] text-white flex items-center justify-center font-bold shadow-sm">✓</div>
+                    <div class="text-[10px] font-bold uppercase text-[#0F6E6E] dark:text-[#5EEAD4]">STEP 01</div>
+                    <div class="text-[12px] font-bold">Submitted</div>
+                    <div class="text-[11px] font-semibold text-[#0F6E6E] dark:text-[#5EEAD4]">Completed</div>
+                    <div class="text-[10px] text-[#71717A] dark:text-[#A1A1AA]">28 Feb 2025, 14:45</div>
+                  </div>
+                  <!-- Step 2 -->
+                  <div class="text-center space-y-1.5">
+                    <div class="mx-auto w-9 h-9 rounded-full bg-[#FCE7F3] dark:bg-[#4C0519] text-[#B30923] dark:text-[#FDA4AF] border-2 border-[#B30923] flex items-center justify-center font-bold">⏳</div>
+                    <div class="text-[10px] font-bold uppercase text-[#B30923] dark:text-[#FCA5A5]">STEP 02</div>
+                    <div class="text-[12px] font-bold">Academic Endorsement</div>
+                    <div class="text-[11px] font-semibold text-[#B30923] dark:text-[#FCA5A5]">In Progress • Active</div>
+                    <div class="text-[10px] text-[#71717A] dark:text-[#A1A1AA]">Waiting for Prof. Kenneth Wong. Expected by 05 Mar.</div>
+                  </div>
+                  <!-- Step 3 -->
+                  <div class="text-center space-y-1.5 opacity-75">
+                    <div class="mx-auto w-9 h-9 rounded-full bg-[#E4E4E7] dark:bg-[#27272A] text-[#71717A] flex items-center justify-center">🔒</div>
+                    <div class="text-[10px] font-bold uppercase text-[#71717A]">STEP 03</div>
+                    <div class="text-[12px] font-bold">Admin Verification</div>
+                    <div class="text-[11px] font-semibold text-[#71717A]">Pending Approval</div>
+                    <div class="text-[10px] text-[#71717A]">School of Design General Office verification</div>
+                  </div>
+                  <!-- Step 4 -->
+                  <div class="text-center space-y-1.5 opacity-75">
+                    <div class="mx-auto w-9 h-9 rounded-full bg-[#E4E4E7] dark:bg-[#27272A] text-[#71717A] flex items-center justify-center">🏛</div>
+                    <div class="text-[10px] font-bold uppercase text-[#71717A]">STEP 04</div>
+                    <div class="text-[12px] font-bold">Reimbursement</div>
+                    <div class="text-[11px] font-semibold text-[#71717A]">Pending Disbursement</div>
+                    <div class="text-[10px] text-[#71717A]">Finance Office direct autopay transfer</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- 2-Column Summary + Support Cards -->
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+                <div class="bg-[#EAEAEA] dark:bg-[#1E2129] rounded-2xl p-5 flex flex-col justify-between">
+                  <div>
+                    <div class="flex items-center gap-2 text-[10px] font-bold">
+                      <span class="px-2 py-0.5 rounded bg-[#FCE7F3] dark:bg-[#4C0519] text-[#B30923] dark:text-[#FCA5A5]">TIER 1 • INTERNATIONAL</span>
+                      <span class="font-mono text-[#52525B] dark:text-[#A1A1AA]">#SUB-2025-089</span>
+                    </div>
+                    <h3 class="sync-comp-name mt-2 text-[16px] font-extrabold">Red Dot Award: Design Concept 2025</h3>
+                    <div class="mt-0.5 text-[11px] text-[#52525B] dark:text-[#A1A1AA]">
+                      📁 Project: <span class="sync-project-title font-semibold text-[#18181B] dark:text-white">AeroWeave Smart Orthosis</span>
+                    </div>
+                  </div>
+                  <div class="mt-4 pt-3 border-t border-black/10 dark:border-white/10 flex items-center justify-between">
+                    <div>
+                      <div class="text-[10px] font-bold uppercase text-[#52525B] dark:text-[#A1A1AA]">APPROVED SUBSIDIZED CLAIM</div>
+                      <div class="text-[15px] font-extrabold text-[#B30923] dark:text-[#F87171] tabular-nums">
+                        <span class="sync-total-hkd">HKD 4,050.00</span> <span class="text-[#52525B] dark:text-[#A1A1AA] text-[12px] font-semibold">/ 100% CAP</span>
+                      </div>
+                    </div>
+                    <button type="button" onclick="navigateTo(10)" class="w-8 h-8 rounded-full bg-[#B30923] text-white flex items-center justify-center font-bold cursor-pointer">›</button>
+                  </div>
+                </div>
+
+                <div class="bg-[#EAEAEA] dark:bg-[#1E2129] rounded-2xl p-5 flex items-start gap-3.5">
+                  <div class="w-9 h-9 rounded-full bg-[#B30923] text-white flex items-center justify-center shrink-0">🎧</div>
+                  <div class="text-[12px] leading-relaxed text-[#3F3F46] dark:text-[#D4D4D8]">
+                    Have questions regarding endorsement? Contact your faculty advisor or the <span class="font-bold text-[#B30923] dark:text-[#FCA5A5]">SD General Office</span> at Room V810.
+                  </div>
+                </div>
+              </div>
+
+              <!-- Action Buttons (Prompt: Clicking "Proceed to Post-Approval Hub" reveals Screen 10) -->
+              <div class="pt-2 flex flex-col items-center gap-3">
+                <button
+                  type="button"
+                  onclick="navigateTo(10)"
+                  class="px-8 py-3 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                >
+                  <span>Proceed to Post-Approval Hub</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </button>
+                <div class="flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onclick="navigateTo(3)"
+                    class="px-5 py-2 rounded-full bg-[#E4E4E7] dark:bg-[#23262F] text-[#18181B] dark:text-white text-[12px] font-bold hover:opacity-85 cursor-pointer"
+                  >
+                    Return to Dashboard
+                  </button>
+                  <button
+                    type="button"
+                    onclick="navigateTo(8)"
+                    class="px-5 py-2 rounded-full bg-[#9E0B22] text-white text-[12px] font-bold hover:bg-[#D22630] cursor-pointer"
+                  >
+                    View Submitted Form
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 10: POST-APPROVAL HUB                          -->
+            <!-- ===================================================== -->
+            <section id="screen-10" class="hidden p-7 space-y-5">
+              <div>
+                <div class="text-[11px] font-semibold text-[#52525B] dark:text-[#A1A1AA]">
+                  <button type="button" onclick="navigateTo(3)" class="hover:underline cursor-pointer">Dashboard</button>
+                  <span class="mx-1">›</span>
+                  <button type="button" onclick="navigateTo(9)" class="hover:underline cursor-pointer">My Applications</button>
+                  <span class="mx-1">›</span>
+                  <span class="text-[#D22630] font-bold">Post-Approval Hub</span>
+                </div>
+                <h1 class="mt-1 text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Post-Approval Hub</h1>
+                <p class="mt-1 text-[12px] text-[#52525B] dark:text-[#A1A1AA]">
+                  Submit certified proof of expenditure and local clearing credentials to initiate institutional disbursement.
+                </p>
+              </div>
+
+              <!-- Approved Grant Allocation Banner -->
+              <div class="bg-[#FDF2F3] dark:bg-[#2A1216] border border-[#FECDD3] dark:border-[#7F1D1D] rounded-2xl p-5 flex items-center justify-between gap-4">
+                <div>
+                  <div class="text-[10px] font-extrabold tracking-wider uppercase text-[#B30923] dark:text-[#FCA5A5]">APPROVED GRANT ALLOCATION</div>
+                  <div class="sync-total-hkd mt-1 text-[24px] font-extrabold text-[#9E0B22] dark:text-white tabular-nums">HKD 4,050.00</div>
+                  <div class="mt-1 text-[11px] text-[#3F3F46] dark:text-[#E4E4E7]">🛡 NetID registry verified • Peter K. Chan</div>
+                </div>
+                <span class="px-3 py-1 rounded-full bg-white dark:bg-[#111318] text-[11px] font-bold text-[#18181B] dark:text-white border border-black/5 dark:border-white/10">100% Match</span>
+              </div>
+
+              <!-- Centered 2-Column Layout -->
+              <div class="max-w-[740px] mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 pt-1">
+                <!-- Left Column: Upload Receipts -->
+                <div class="space-y-3.5">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[13px] font-bold">
+                      <span class="w-5 h-5 rounded-full bg-[#B30923] text-white flex items-center justify-center text-[10px]">1</span>
+                      <span>Upload Receipts</span>
+                    </div>
+                    <span id="hub-upload-count" class="px-2.5 py-0.5 rounded-full bg-[#CCFBF1] dark:bg-[#134E4A] text-[#0F6E6E] dark:text-[#5EEAD4] text-[10px] font-bold">1 of 2 Uploaded</span>
+                  </div>
+                  <p class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">Official tax invoices, debit receipts, or itemized airway vouchers.</p>
+
+                  <!-- Receipt 1 -->
+                  <div class="bg-[#EAEAEA] dark:bg-[#23262F] rounded-xl p-3.5 space-y-2.5">
+                    <div class="flex items-start justify-between gap-2">
+                      <div class="flex items-center gap-2.5">
+                        <span class="w-8 h-8 rounded-lg bg-[#FECDD3] text-[#B30923] flex items-center justify-center text-[10px] font-bold shrink-0">PDF</span>
+                        <div>
+                          <div class="text-[12px] font-bold">Receipt_RedDot.pdf <span class="text-[#0F6E6E]">✓</span></div>
+                          <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">1.4 MB • 28 Feb 2025</div>
+                        </div>
+                      </div>
+                      <div class="text-right tabular-nums">
+                        <div class="sync-entrance-hkd text-[12px] font-extrabold">HKD 3,200.00</div>
+                        <div class="text-[10px] text-[#0F6E6E] dark:text-[#5EEAD4]">Entrance Fee</div>
+                      </div>
+                    </div>
+                    <div class="flex items-center justify-between text-[10px]">
+                      <span class="font-bold text-[#0F6E6E] dark:text-[#5EEAD4]">• Auto-OCR Verified</span>
+                      <div class="flex gap-1.5">
+                        <button type="button" onclick="showToast('Previewing Receipt_RedDot.pdf (Official Receipt Verified)')" class="px-2.5 py-1 rounded bg-white dark:bg-[#111318] font-semibold cursor-pointer">Preview</button>
+                        <button type="button" onclick="showToast('Select replacement receipt file...')" class="px-2.5 py-1 rounded bg-[#FECDD3] text-[#9E0B22] font-semibold cursor-pointer">Replace</button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Upload Box for Receipt 2 -->
+                  <button
+                    type="button"
+                    id="shipping-receipt-dropzone"
+                    onclick="simulateShippingReceiptUpload()"
+                    class="w-full text-center bg-[#EAEAEA] dark:bg-[#23262F] hover:bg-[#E0E0E5] dark:hover:bg-[#2B2F3A] border-2 border-dashed border-black/15 dark:border-white/15 rounded-xl p-4 transition-colors cursor-pointer"
+                  >
+                    <div class="mx-auto w-8 h-8 rounded-full bg-white dark:bg-[#111318] text-[#B30923] flex items-center justify-center mb-2">↑</div>
+                    <div id="shipping-receipt-title" class="text-[12px] font-bold">Shipping Fee Receipt</div>
+                    <div id="shipping-receipt-sub" class="text-[10px] text-[#52525B] dark:text-[#A1A1AA] mt-0.5">
+                      Tap to upload DHL / courier freight airway bill slip<br />
+                      PDF, JPG up to 10MB • <span class="font-bold text-[#B30923] dark:text-[#FCA5A5]">Max cap: <span class="sync-shipping-hkd">HKD 850.00</span></span>
+                    </div>
+                  </button>
+
+                  <!-- Declaration -->
+                  <label class="flex items-start gap-2.5 bg-[#EAEAEA] dark:bg-[#23262F] rounded-xl p-3 cursor-pointer">
+                    <input type="checkbox" checked class="mt-0.5 w-4 h-4 rounded accent-[#9E0B22] shrink-0" />
+                    <span class="text-[10px] leading-relaxed text-[#3F3F46] dark:text-[#D4D4D8]">
+                      I declare that the submitted vouchers are genuine, original, and have not been previously subsidized under any other PolyU or HKSAR funding scheme.
+                    </span>
+                  </label>
+
+                  <!-- Totals Card -->
+                  <div class="bg-[#EAEAEA] dark:bg-[#23262F] rounded-xl p-3.5 space-y-1.5 text-[11px] tabular-nums">
+                    <div class="flex justify-between">
+                      <span>Entrance Fee Subtotal</span>
+                      <span class="sync-entrance-hkd font-bold">HKD 3,200.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span>Freight / Airway Fee Subtotal</span>
+                      <span class="sync-shipping-hkd font-bold">HKD 850.00</span>
+                    </div>
+                    <div class="flex justify-between pt-1.5 border-t border-black/10 dark:border-white/10 font-extrabold text-[12px]">
+                      <span>Total Requested Reimbursement</span>
+                      <span class="sync-total-hkd text-[#B30923] dark:text-[#FCA5A5]">HKD 4,050.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Right Column: Disbursement Bank Details -->
+                <div class="space-y-3.5">
+                  <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-2 text-[13px] font-bold">
+                      <span class="w-5 h-5 rounded-full bg-[#B30923] text-white flex items-center justify-center text-[10px]">2</span>
+                      <span>Disbursement Bank Details</span>
+                    </div>
+                    <span class="px-2.5 py-0.5 rounded-full bg-[#CCFBF1] dark:bg-[#134E4A] text-[#0F6E6E] dark:text-[#5EEAD4] text-[10px] font-bold">🔒 Autopay</span>
+                  </div>
+                  <p class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">University direct electronic deposit to registered student legal name.</p>
+
+                  <div>
+                    <div class="text-[10px] font-bold uppercase text-[#52525B] dark:text-[#A1A1AA] mb-1">RECEIVING BANK</div>
+                    <select id="hub-bank-select" onchange="syncBankToReceipt()" class="w-full bg-[#EAEAEA] dark:bg-[#23262F] rounded-xl px-3.5 py-3 text-[12px] font-bold focus:outline-none cursor-pointer">
+                      <option value="HSBC (The Hongkong and Shanghai Banking Corp)">004 • HSBC Hong Kong</option>
+                      <option value="Hang Seng Bank Limited">024 • Hang Seng Bank</option>
+                      <option value="Bank of China (Hong Kong)">012 • Bank of China (HK)</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <div class="flex justify-between text-[10px] font-bold mb-1">
+                      <span class="uppercase text-[#52525B] dark:text-[#A1A1AA]">ACCOUNT HOLDER NAME</span>
+                      <span class="text-[#0F6E6E] dark:text-[#5EEAD4]">✓ NetID Matched</span>
+                    </div>
+                    <div class="flex items-center justify-between bg-[#EAEAEA] dark:bg-[#23262F] rounded-xl px-3.5 py-3 text-[12px] font-bold">
+                      <span>CHAN PETER KA CHUN</span>
+                      <span>🔒</span>
+                    </div>
+                    <div class="text-[10px] text-[#71717A] mt-1">Pre-filled via Registry (Student ID: 21088492D). Non-editable.</div>
+                  </div>
+
+                  <div>
+                    <div class="text-[10px] font-bold uppercase text-[#52525B] dark:text-[#A1A1AA] mb-1">ACCOUNT NUMBER (WITH BRANCH CODE)</div>
+                    <input
+                      type="text"
+                      value="582-882190-833"
+                      class="w-full bg-[#EAEAEA] dark:bg-[#23262F] rounded-xl px-3.5 py-3 text-[12px] font-mono font-bold focus:outline-none"
+                    />
+                    <div class="text-[10px] text-[#71717A] mt-1">Format: 3-digit branch + 6 to 9-digit account digits.</div>
+                  </div>
+
+                  <div class="bg-[#EAEAEA] dark:bg-[#23262F] rounded-xl p-3.5 flex items-center justify-between gap-2">
+                    <div>
+                      <div class="text-[10px] font-bold uppercase text-[#52525B] dark:text-[#A1A1AA]">LINKED STUDENT FPS ID</div>
+                      <div class="text-[11px] font-mono font-semibold">21088492D@connect.polyu.hk</div>
+                    </div>
+                    <span class="text-[11px] font-bold text-[#0F6E6E] dark:text-[#5EEAD4]">Connected</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- CTA Button (Prompt: Clicking "Submit Claim" reveals Screen 11) -->
+              <div class="pt-2 flex justify-center">
+                <button
+                  type="button"
+                  onclick="navigateTo(11)"
+                  class="px-8 py-3 rounded-full bg-[#9E0B22] hover:bg-[#D22630] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                >
+                  <span>Submit Claim</span>
+                  <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14m-6-6l6 6-6 6"></path>
+                  </svg>
+                </button>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN 11: PAYMENT SUCCESS                            -->
+            <!-- ===================================================== -->
+            <section id="screen-11" class="hidden p-7 space-y-5">
+              <div class="text-[11px] font-semibold uppercase tracking-wide text-[#52525B] dark:text-[#A1A1AA]">
+                <span>DASHBOARD</span>
+                <span class="mx-1">›</span>
+                <span>MY APPLICATIONS</span>
+                <span class="mx-1">›</span>
+                <span>POST-APPROVAL HUB</span>
+                <span class="mx-1">›</span>
+                <span class="text-[#D22630] font-bold">REIMBURSEMENT SETTLED</span>
+              </div>
+
+              <!-- Hero Payment Confirmation -->
+              <div class="text-center max-w-[540px] mx-auto pt-1">
+                <div class="mx-auto w-16 h-16 rounded-full bg-[#CCFBF1] dark:bg-[#134E4A] flex items-center justify-center">
+                  <div class="w-11 h-11 rounded-full bg-[#0F6E6E] text-white flex items-center justify-center shadow-sm">
+                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.6">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                    </svg>
+                  </div>
+                </div>
+                <h1 class="mt-3 text-[28px] font-extrabold tracking-tight text-[#111827] dark:text-white">Payment Processed Successfully!</h1>
+                <p class="mt-1.5 text-[12px] leading-relaxed text-[#52525B] dark:text-[#A1A1AA]">
+                  Your reimbursement claim has been verified and settled. The funds have been deposited directly into your designated Hong Kong bank account.
+                </p>
+              </div>
+
+              <!-- Centered Official Disbursement Receipt Card -->
+              <div class="max-w-[660px] mx-auto bg-[#F1F2F4] dark:bg-[#1E2129] rounded-2xl p-5 space-y-2.5 border border-black/5 dark:border-white/10">
+                <div class="flex flex-wrap items-center justify-between gap-2 px-2 pb-1 text-[11px]">
+                  <span class="font-extrabold tracking-wider uppercase text-[#18181B] dark:text-white">🧾 OFFICIAL DISBURSEMENT RECEIPT</span>
+                  <span class="font-bold text-[#0F6E6E] dark:text-[#5EEAD4]">🏛 Status: Credited via Autopay (Direct Credit)</span>
+                </div>
+
+                <!-- Amount Paid -->
+                <div class="bg-white dark:bg-[#13151B] rounded-xl px-4 py-3.5 flex items-center justify-between">
+                  <span class="text-[13px] font-bold">💵 Amount Paid</span>
+                  <div class="tabular-nums flex items-baseline gap-1.5">
+                    <span class="text-[12px] font-bold text-[#52525B] dark:text-[#A1A1AA]">HKD</span>
+                    <span id="receipt-amount-paid" class="text-[24px] font-extrabold text-[#D22630]">4,050.00</span>
+                  </div>
+                </div>
+
+                <!-- Settlement Date -->
+                <div class="bg-white dark:bg-[#13151B] rounded-xl px-4 py-3 flex items-center justify-between text-[12px]">
+                  <span class="font-medium text-[#3F3F46] dark:text-[#D4D4D8]">📅 Payment Settlement Date</span>
+                  <span class="font-bold tabular-nums">05 Mar 2025, 11:20 HKT</span>
+                </div>
+
+                <!-- Bank Account -->
+                <div class="bg-white dark:bg-[#13151B] rounded-xl px-4 py-3 flex items-center justify-between gap-3 text-[12px]">
+                  <span class="font-medium text-[#3F3F46] dark:text-[#D4D4D8]">💳 Receiving Bank Account</span>
+                  <div class="text-right">
+                    <div id="receipt-bank-name" class="font-bold">HSBC (The Hongkong and Shanghai Banking Corp)</div>
+                    <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">•••• 4567 (Chan Peter Ka Chun)</div>
+                  </div>
+                </div>
+
+                <!-- Transaction Ref -->
+                <div class="bg-white dark:bg-[#13151B] rounded-xl px-4 py-3 flex items-center justify-between gap-3 text-[12px]">
+                  <span class="font-medium text-[#3F3F46] dark:text-[#D4D4D8]"># Finance Office Transaction Ref</span>
+                  <div class="flex items-center gap-2">
+                    <span class="font-mono font-bold">TXN-2025-99012</span>
+                    <button type="button" onclick="showToast('Transaction Ref TXN-2025-99012 copied')" class="text-[#0F6E6E] dark:text-[#5EEAD4] text-[11px] cursor-pointer" title="Copy Reference">❐</button>
+                    <span class="px-2 py-0.5 rounded bg-[#CCFBF1] dark:bg-[#134E4A] text-[#0F6E6E] dark:text-[#5EEAD4] text-[10px] font-bold">Verified</span>
+                  </div>
+                </div>
+
+                <!-- Funding Source -->
+                <div class="bg-white dark:bg-[#13151B] rounded-xl px-4 py-3 flex items-center justify-between gap-3 text-[12px]">
+                  <span class="font-medium text-[#3F3F46] dark:text-[#D4D4D8]">🏛 Institutional Funding Source</span>
+                  <div class="text-right">
+                    <div class="font-bold">AY 2024/25 Design Competition Subsidy Scheme</div>
+                    <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">UGC Account: 7-FD-902 • School of Design</div>
+                  </div>
+                </div>
+
+                <!-- Settlement Coverage -->
+                <div class="bg-white dark:bg-[#13151B] rounded-xl px-4 py-3.5 flex flex-wrap items-center justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <span class="w-8 h-8 rounded-full bg-[#FEE2E2] dark:bg-[#450A0A] text-[#D22630] flex items-center justify-center font-bold">◎</span>
+                    <div>
+                      <div class="text-[12px] font-bold">Settlement Coverage</div>
+                      <div class="text-[10px] text-[#52525B] dark:text-[#A1A1AA]">Approved claim matched 100% of verified receipts</div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-3 text-right tabular-nums">
+                    <div>
+                      <div class="text-[9px] font-bold uppercase text-[#71717A]">SUBMITTED</div>
+                      <div class="sync-total-hkd-symbol text-[12px] font-extrabold">HK$4,050.00</div>
+                    </div>
+                    <span class="text-[#A1A1AA]">→</span>
+                    <div>
+                      <div class="text-[9px] font-bold uppercase text-[#D22630]">DISBURSED</div>
+                      <div class="sync-total-hkd-symbol text-[12px] font-extrabold text-[#D22630]">HK$4,050.00</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Bottom Actions (Prompt: Clicking "Return to Dashboard" returns to Screen 3) -->
+              <div class="pt-1 flex flex-col items-center gap-3">
+                <div class="flex flex-wrap items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onclick="navigateTo(3)"
+                    class="px-7 py-3 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[13px] font-bold flex items-center gap-2 shadow-md transition-colors cursor-pointer"
+                  >
+                    <span>← Return to Dashboard</span>
+                  </button>
+                  <button
+                    type="button"
+                    onclick="downloadReceiptFile()"
+                    class="px-6 py-3 rounded-full bg-white dark:bg-[#1E2129] border border-black/15 dark:border-white/15 text-[#18181B] dark:text-white text-[12px] font-bold hover:bg-black/5 transition-colors cursor-pointer"
+                  >
+                    ↓ Download Official Receipt (PDF)
+                  </button>
+                </div>
+                <button
+                  type="button"
+                  onclick="navigateTo(8)"
+                  class="text-[11px] font-bold text-[#18181B] dark:text-[#E4E4E7] hover:text-[#D22630] transition-colors cursor-pointer"
+                >
+                  View Full Application Dossier (#SUB-2025-089) →
+                </button>
+              </div>
+            </section>
+
+            <!-- ===================================================== -->
+            <!-- SCREEN MY APPS: DEDICATED MY APPLICATIONS PAGE        -->
+            <!-- ===================================================== -->
+            <section id="screen-my-apps" class="hidden p-7 space-y-6">
+              <!-- Top Navigation Area: Back button, Title, Wide Search bar -->
+              <div class="space-y-4">
+                <div class="flex flex-wrap items-center justify-between gap-4">
+                  <div class="flex items-center gap-3">
+                    <button
+                      type="button"
+                      id="my-apps-back-btn"
+                      onclick="navigateTo(3)"
+                      class="px-4 py-2 rounded-full bg-[#E4E4E7] dark:bg-[#23262F] hover:bg-[#D4D4D8] dark:hover:bg-[#2E323D] text-[#18181B] dark:text-white text-[12px] font-bold inline-flex items-center gap-1.5 transition-colors cursor-pointer whitespace-nowrap"
+                    >
+                      <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 12H5m6-6l-6 6 6 6"></path>
+                      </svg>
+                      <span>Back</span>
+                    </button>
+                    <div>
+                      <h1 class="text-[26px] font-extrabold tracking-tight text-[#111827] dark:text-white leading-tight">My Applications</h1>
+                      <p class="text-[11px] text-[#52525B] dark:text-[#A1A1AA]">AY 2024/25 Subsidy Portfolio • 4 Recorded Submissions</p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onclick="navigateTo(4)"
+                    class="px-4 py-2 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[12px] font-bold shadow-sm transition-colors cursor-pointer whitespace-nowrap"
+                  >
+                    + New Application
+                  </button>
+                </div>
+
+                <!-- Wide Search Bar -->
+                <div class="relative w-full">
+                  <svg class="w-4 h-4 text-[#52525B] dark:text-[#A1A1AA] absolute left-4 top-1/2 -translate-y-1/2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.2">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path stroke-linecap="round" d="M21 21l-4.35-4.35"></path>
+                  </svg>
+                  <input
+                    id="my-apps-search"
+                    type="text"
+                    placeholder="Search applications by competition name, project title, or status..."
+                    oninput="filterMyApps(this.value)"
+                    class="w-full bg-[#F4F4F5] dark:bg-[#1E2129] border border-black/10 dark:border-white/10 text-[13px] text-[#18181B] dark:text-white placeholder-[#71717A] dark:placeholder-[#9CA3AF] rounded-2xl pl-11 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-[#D22630]/40"
+                  />
+                </div>
+              </div>
+
+              <!-- 2-Column Grid for 4 Application Cards -->
+              <div id="my-apps-grid" class="grid grid-cols-2 gap-4">
+                <!-- Card 1: Approved (James Dyson Award) -->
+                <article
+                  data-search="james dyson award aquafilter kinetic approved"
+                  class="my-app-card bg-[#F4F4F5] dark:bg-[#1E2129] border border-black/10 dark:border-white/10 rounded-2xl p-5 flex flex-col justify-between min-h-[190px]"
+                >
+                  <div>
+                    <div class="flex items-start justify-between gap-2">
+                      <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-[10px] font-bold whitespace-nowrap">
+                        ✓ Approved
+                      </span>
+                      <span class="text-[11px] font-mono text-[#52525B] dark:text-[#A1A1AA]">#SUB-2025-041</span>
+                    </div>
+                    <h2 class="mt-3 text-[18px] font-extrabold text-[#111827] dark:text-white leading-snug">James Dyson Award</h2>
+                    <p class="mt-1 text-[12px] text-[#52525B] dark:text-[#A1A1AA]">Project: "AquaFilter Kinetic" • Tangible Engineering</p>
+                  </div>
+
+                  <div class="mt-5 pt-3.5 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
+                    <div>
+                      <div class="text-[10px] font-semibold uppercase tracking-wider text-[#71717A] dark:text-[#A1A1AA]">Amount</div>
+                      <div class="text-[16px] font-extrabold text-[#111827] dark:text-white tabular-nums">HK$ 1,000.00</div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="navigateTo(10)"
+                      class="px-4 py-2 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[12px] font-bold transition-colors cursor-pointer whitespace-nowrap"
+                    >
+                      View Details →
+                    </button>
+                  </div>
+                </article>
+
+                <!-- Card 2: Approved (HKDA Global Design Awards) -->
+                <article
+                  data-search="hkda global design awards lumenway tactile map approved"
+                  class="my-app-card bg-[#F4F4F5] dark:bg-[#1E2129] border border-black/10 dark:border-white/10 rounded-2xl p-5 flex flex-col justify-between min-h-[190px]"
+                >
+                  <div>
+                    <div class="flex items-start justify-between gap-2">
+                      <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 dark:bg-emerald-950/80 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-700 text-[10px] font-bold whitespace-nowrap">
+                        ✓ Approved
+                      </span>
+                      <span class="text-[11px] font-mono text-[#52525B] dark:text-[#A1A1AA]">#SUB-2025-028</span>
+                    </div>
+                    <h2 class="mt-3 text-[18px] font-extrabold text-[#111827] dark:text-white leading-snug">HKDA Global Design Awards</h2>
+                    <p class="mt-1 text-[12px] text-[#52525B] dark:text-[#A1A1AA]">Project: "LumenWay Tactile Map" • Civic Wayfinding</p>
+                  </div>
+
+                  <div class="mt-5 pt-3.5 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
+                    <div>
+                      <div class="text-[10px] font-semibold uppercase tracking-wider text-[#71717A] dark:text-[#A1A1AA]">Amount</div>
+                      <div class="text-[16px] font-extrabold text-[#111827] dark:text-white tabular-nums">HK$ 2,000.00</div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="navigateTo(10)"
+                      class="px-4 py-2 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[12px] font-bold transition-colors cursor-pointer whitespace-nowrap"
+                    >
+                      View Details →
+                    </button>
+                  </div>
+                </article>
+
+                <!-- Card 3: Pending (iF Design Student Award) -->
+                <article
+                  data-search="if design student award aurawear pending"
+                  class="my-app-card bg-[#F4F4F5] dark:bg-[#1E2129] border border-black/10 dark:border-white/10 rounded-2xl p-5 flex flex-col justify-between min-h-[190px]"
+                >
+                  <div>
+                    <div class="flex items-start justify-between gap-2">
+                      <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 dark:bg-amber-950/80 dark:text-amber-300 border border-amber-300 dark:border-amber-700 text-[10px] font-bold whitespace-nowrap">
+                        ⏳ Pending
+                      </span>
+                      <span class="text-[11px] font-mono text-[#52525B] dark:text-[#A1A1AA]">#SUB-2025-089</span>
+                    </div>
+                    <h2 class="mt-3 text-[18px] font-extrabold text-[#111827] dark:text-white leading-snug">iF Design Student Award</h2>
+                    <p class="mt-1 text-[12px] text-[#52525B] dark:text-[#A1A1AA]">Project: "AuraWear" • Social Impact &amp; Accessibility</p>
+                  </div>
+
+                  <div class="mt-5 pt-3.5 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
+                    <div>
+                      <div class="text-[10px] font-semibold uppercase tracking-wider text-[#71717A] dark:text-[#A1A1AA]">Amount</div>
+                      <div class="text-[16px] font-extrabold text-[#111827] dark:text-white tabular-nums">HK$ 3,200.00</div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="navigateTo(9)"
+                      class="px-4 py-2 rounded-full bg-[#D22630] hover:bg-[#B30923] text-white text-[12px] font-bold transition-colors cursor-pointer whitespace-nowrap"
+                    >
+                      View Details →
+                    </button>
+                  </div>
+                </article>
+
+                <!-- Card 4: Draft (Red Dot: Design Concept) -->
+                <article
+                  data-search="red dot design concept biomimicry mobility capsule draft"
+                  class="my-app-card bg-[#F4F4F5] dark:bg-[#1E2129] border border-black/10 dark:border-white/10 rounded-2xl p-5 flex flex-col justify-between min-h-[190px]"
+                >
+                  <div>
+                    <div class="flex items-start justify-between gap-2">
+                      <span class="px-2.5 py-0.5 rounded-full bg-zinc-200 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200 border border-zinc-300 dark:border-zinc-700 text-[10px] font-bold whitespace-nowrap">
+                        ✎ Draft
+                      </span>
+                      <span class="text-[11px] font-mono text-[#52525B] dark:text-[#A1A1AA]">60% Saved</span>
+                    </div>
+                    <h2 class="mt-3 text-[18px] font-extrabold text-[#111827] dark:text-white leading-snug">Red Dot: Design Concept</h2>
+                    <p class="mt-1 text-[12px] text-[#52525B] dark:text-[#A1A1AA]">Project: Biomimicry Mobility Capsule</p>
+                  </div>
+
+                  <div class="mt-5 pt-3.5 border-t border-black/10 dark:border-white/10 flex items-center justify-between gap-3">
+                    <div>
+                      <div class="text-[10px] font-semibold uppercase tracking-wider text-[#71717A] dark:text-[#A1A1AA]">Amount</div>
+                      <div class="text-[16px] font-extrabold text-[#111827] dark:text-white tabular-nums">HK$ 4,500.00</div>
+                    </div>
+                    <button
+                      type="button"
+                      onclick="navigateTo(4)"
+                      class="px-4 py-2 rounded-full bg-[#18181B] dark:bg-white text-white dark:text-[#18181B] hover:opacity-90 text-[12px] font-bold transition-opacity cursor-pointer whitespace-nowrap"
+                    >
+                      View Details →
+                    </button>
+                  </div>
+                </article>
+              </div>
+            </section>
+          </main>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vanilla JS SPA Controller -->
+    <script>
+      (function () {
+        var currentScreen = 1;
+        var shippingReceiptUploaded = false;
+
+        // Expose functions globally for inline handlers
+        window.navigateTo = function (screenNum) {
+          currentScreen = screenNum;
+
+          var screen1 = document.getElementById('screen-1');
+          var screen2 = document.getElementById('screen-2');
+          var portalShell = document.getElementById('portal-shell');
+
+          // Hide top-level shells first
+          screen1.classList.add('hidden');
+          screen2.classList.add('hidden');
+          portalShell.classList.add('hidden');
+
+          // Hide all inner screens 3..11 and my-apps
+          for (var i = 3; i <= 11; i++) {
+            var el = document.getElementById('screen-' + i);
+            if (el) el.classList.add('hidden');
+          }
+          var myAppsEl = document.getElementById('screen-my-apps');
+          if (myAppsEl) myAppsEl.classList.add('hidden');
+
+          if (screenNum === 1) {
+            screen1.classList.remove('hidden');
+            screen1.scrollTop = 0;
+          } else if (screenNum === 2) {
+            screen2.classList.remove('hidden');
+            screen2.scrollTop = 0;
+          } else {
+            portalShell.classList.remove('hidden');
+            var targetId = screenNum === 'my-apps' ? 'screen-my-apps' : 'screen-' + screenNum;
+            var target = document.getElementById(targetId);
+            if (target) {
+              target.classList.remove('hidden');
+              var mainScroll = target.parentElement;
+              if (mainScroll) mainScroll.scrollTop = 0;
+            }
+            updateSidebarActiveState(screenNum);
+            syncApplicationData();
+          }
+        };
+
+        function updateSidebarActiveState(screenNum) {
+          var navTarget = 'dashboard';
+          if (screenNum === 3) navTarget = 'dashboard';
+          else if (screenNum >= 4 && screenNum <= 8) navTarget = 'new-application';
+          else if (screenNum === 9 || screenNum === 'my-apps') navTarget = 'applications';
+          else if (screenNum === 10 || screenNum === 11) navTarget = 'reimbursements';
+
+          var btns = document.querySelectorAll('.sidebar-nav-btn');
+          btns.forEach(function (btn) {
+            var key = btn.getAttribute('data-nav');
+            if (key === navTarget) {
+              btn.classList.add('bg-[#D22630]', 'text-white', 'shadow-sm');
+              btn.classList.remove('text-[#18181B]', 'dark:text-[#E4E4E7]', 'hover:bg-black/5', 'dark:hover:bg-white/5');
+            } else {
+              btn.classList.remove('bg-[#D22630]', 'text-white', 'shadow-sm');
+              btn.classList.add('text-[#18181B]', 'dark:text-[#E4E4E7]', 'hover:bg-black/5', 'dark:hover:bg-white/5');
+            }
+          });
+        }
+
+        // Theme Toggle (Light / Dark mode via html.dark)
+        var themeBtn = document.getElementById('theme-toggle-btn');
+        var iconSun = document.getElementById('icon-sun');
+        var iconMoon = document.getElementById('icon-moon');
+
+        function applyTheme(isDark) {
+          if (isDark) {
+            document.documentElement.classList.add('dark');
+            iconSun.classList.remove('hidden');
+            iconMoon.classList.add('hidden');
+          } else {
+            document.documentElement.classList.remove('dark');
+            iconSun.classList.add('hidden');
+            iconMoon.classList.remove('hidden');
+          }
+        }
+
+        themeBtn.addEventListener('click', function () {
+          var isCurrentlyDark = document.documentElement.classList.contains('dark');
+          applyTheme(!isCurrentlyDark);
+        });
+
+        // Role selection on Screen 1 & 2
+        window.selectRoleAndLogin = function (role) {
+          window.setLoginRole(role);
+          window.navigateTo(2);
+        };
+
+        window.setLoginRole = function (role) {
+          var btns = document.querySelectorAll('.login-role-btn');
+          btns.forEach(function (btn) {
+            if (btn.getAttribute('data-login-role') === role) {
+              btn.classList.add('bg-[#A50F24]', 'text-white');
+              btn.classList.remove('text-white/80');
+            } else {
+              btn.classList.remove('bg-[#A50F24]', 'text-white');
+              btn.classList.add('text-white/80');
+            }
+          });
+        };
+
+        window.toggleLoginPassword = function () {
+          var pw = document.getElementById('login-password');
+          pw.type = pw.type === 'password' ? 'text' : 'password';
+        };
+
+        // Dashboard filtering & search
+        window.filterDashboardApps = function (status) {
+          var filterBtns = document.querySelectorAll('.dash-filter-btn');
+          filterBtns.forEach(function (btn) {
+            if (btn.getAttribute('data-filter') === status) {
+              btn.classList.add('bg-[#D22630]', 'text-white');
+              btn.classList.remove('text-white/80');
+            } else {
+              btn.classList.remove('bg-[#D22630]', 'text-white');
+              btn.classList.add('text-white/80');
+            }
+          });
+
+          var cards = document.querySelectorAll('.dash-app-card');
+          cards.forEach(function (card) {
+            var cardStatus = card.getAttribute('data-status');
+            if (status === 'all' || cardStatus === status) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        };
+
+        window.handleGlobalSearch = function (query) {
+          var q = (query || '').trim().toLowerCase();
+          if (currentScreen === 3) {
+            var cards = document.querySelectorAll('.dash-app-card');
+            cards.forEach(function (card) {
+              var text = (card.getAttribute('data-title') || '').toLowerCase();
+              if (!q || text.indexOf(q) !== -1) {
+                card.classList.remove('hidden');
+              } else {
+                card.classList.add('hidden');
+              }
+            });
+          } else if (currentScreen === 4) {
+            var compCards = document.querySelectorAll('.comp-card');
+            compCards.forEach(function (card) {
+              var name = (card.getAttribute('data-comp-name') || '').toLowerCase();
+              if (!q || name.indexOf(q) !== -1) {
+                card.classList.remove('hidden');
+              } else {
+                card.classList.add('hidden');
+              }
+            });
+          } else if (currentScreen === 'my-apps') {
+            window.filterMyApps(query);
+          }
+        };
+
+        window.filterMyApps = function (query) {
+          var q = (query || '').trim().toLowerCase();
+          var cards = document.querySelectorAll('.my-app-card');
+          cards.forEach(function (card) {
+            var text = (card.getAttribute('data-search') || '').toLowerCase();
+            if (!q || text.indexOf(q) !== -1) {
+              card.classList.remove('hidden');
+            } else {
+              card.classList.add('hidden');
+            }
+          });
+        };
+
+        // Screen 4 Competition Selection
+        var selectedCompetitionName = 'Red Dot Award: Design Concept 2025';
+        window.selectCompetitionCard = function (cardEl) {
+          selectedCompetitionName = cardEl.getAttribute('data-comp-name') || selectedCompetitionName;
+          var compUrl = cardEl.getAttribute('data-comp-url');
+          var urlInput = document.getElementById('input-comp-url');
+          if (urlInput && compUrl) urlInput.value = compUrl;
+
+          var allCards = document.querySelectorAll('.comp-card');
+          allCards.forEach(function (c) {
+            var tierPill = c.querySelector('.comp-tier-pill');
+            var locPill = c.querySelector('.comp-loc-pill');
+            var tagPill = c.querySelector('.comp-tag-pill');
+            var check = c.querySelector('.comp-check');
+
+            if (c === cardEl) {
+              c.classList.remove('bg-[#E4E4E7]', 'dark:bg-[#1E2129]', 'text-[#18181B]', 'dark:text-white');
+              c.classList.add('bg-[#A50F24]', 'text-white');
+              if (tierPill) {
+                tierPill.classList.remove('bg-[#9E0B22]', 'text-white');
+                tierPill.classList.add('bg-white', 'text-[#9E0B22]');
+              }
+              if (locPill) {
+                locPill.classList.remove('bg-[#3F3F46]', 'text-white');
+                locPill.classList.add('bg-white', 'text-[#18181B]');
+              }
+              if (tagPill) {
+                tagPill.classList.remove('bg-[#71717A]', 'bg-[#3F3F46]', 'text-white');
+                tagPill.classList.add('bg-white', 'text-[#18181B]');
+              }
+              if (check) {
+                check.classList.remove('bg-[#71717A]');
+                check.classList.add('bg-white/25');
+              }
+            } else {
+              c.classList.add('bg-[#E4E4E7]', 'dark:bg-[#1E2129]', 'text-[#18181B]', 'dark:text-white');
+              c.classList.remove('bg-[#A50F24]', 'text-white');
+              if (tierPill) {
+                tierPill.classList.add('bg-[#9E0B22]', 'text-white');
+                tierPill.classList.remove('bg-white', 'text-[#9E0B22]');
+              }
+              if (locPill) {
+                locPill.classList.add('bg-[#3F3F46]', 'text-white');
+                locPill.classList.remove('bg-white', 'text-[#18181B]');
+              }
+              if (tagPill) {
+                tagPill.classList.add('bg-[#3F3F46]', 'text-white');
+                tagPill.classList.remove('bg-white', 'text-[#18181B]');
+              }
+              if (check) {
+                check.classList.add('bg-[#71717A]');
+                check.classList.remove('bg-white/25');
+              }
+            }
+          });
+
+          var label = document.getElementById('selected-comp-label');
+          if (label) {
+            label.textContent = '1 of 4 Competitions Selected (' + selectedCompetitionName + ')';
+          }
+          syncApplicationData();
+        };
+
+        // Screen 5 Salutation
+        window.selectSalutation = function (btn) {
+          document.querySelectorAll('.salutation-btn').forEach(function (b) {
+            b.classList.remove('bg-[#9E0B22]', 'text-white', 'font-bold');
+            b.classList.add('bg-[#E4E4E7]', 'dark:bg-[#23262F]', 'text-[#52525B]', 'dark:text-[#A1A1AA]', 'font-semibold');
+          });
+          btn.classList.add('bg-[#9E0B22]', 'text-white', 'font-bold');
+          btn.classList.remove('bg-[#E4E4E7]', 'dark:bg-[#23262F]', 'text-[#52525B]', 'dark:text-[#A1A1AA]', 'font-semibold');
+        };
+
+        // Screen 6 Toggles
+        window.toggleYesNo = function (btn, groupName, val) {
+          var selector = groupName === 'group' ? '.group-toggle' : '.coursework-toggle';
+          document.querySelectorAll(selector).forEach(function (b) {
+            b.classList.remove('bg-[#9E0B22]', 'text-white');
+            b.classList.add('text-white/85');
+          });
+          btn.classList.add('bg-[#9E0B22]', 'text-white');
+          btn.classList.remove('text-white/85');
+        };
+
+        var recognitionLevel = 'International';
+        window.selectRecognitionLevel = function (btn, level) {
+          recognitionLevel = level;
+          document.querySelectorAll('.recog-btn').forEach(function (b) {
+            b.classList.remove('bg-[#9E0B22]', 'text-white');
+            b.classList.add('bg-[#E4E4E7]', 'dark:bg-[#23262F]', 'text-[#52525B]', 'dark:text-[#A1A1AA]');
+          });
+          btn.classList.add('bg-[#9E0B22]', 'text-white');
+          btn.classList.remove('bg-[#E4E4E7]', 'dark:bg-[#23262F]', 'text-[#52525B]', 'dark:text-[#A1A1AA]');
+          syncApplicationData();
+        };
+
+        // Screen 7 Signature & Claim Calculations + Shipping Validation
+        window.resignSignature = function () {
+          var sig = document.getElementById('digital-signature-display');
+          if (sig) {
+            sig.style.opacity = '0.25';
+            setTimeout(function () {
+              sig.style.opacity = '1';
+              window.showToast('Digital signature verified: POLYU-HK-8492');
+            }, 220);
+          }
+        };
+
+        function formatMoney(num) {
+          var n = isNaN(num) ? 0 : Math.max(0, num);
+          return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        window.recalculateClaimTotal = function () {
+          var ent = parseFloat(document.getElementById('input-entrance-fee').value) || 0;
+          var ship = parseFloat(document.getElementById('input-shipping-fee').value) || 0;
+          var total = ent + ship;
+          var totalDisplay = document.getElementById('claim-total-display');
+          if (totalDisplay) {
+            totalDisplay.textContent = 'HK$ ' + formatMoney(total);
+          }
+          syncApplicationData();
+        };
+
+        window.validateAndRecalculateShipping = function () {
+          var shipInput = document.getElementById('input-shipping-fee');
+          var shipVal = parseFloat(shipInput.value) || 0;
+          var wrapper = document.getElementById('shipping-fee-wrapper');
+          var errBox = document.getElementById('shipping-error-msg');
+          var hint = document.getElementById('shipping-allowance-hint');
+
+          if (shipVal > 1000) {
+            wrapper.classList.remove('border-transparent');
+            wrapper.classList.add('border-red-600', 'ring-2', 'ring-red-500/25');
+            errBox.classList.remove('hidden');
+            hint.classList.add('hidden');
+          } else {
+            wrapper.classList.add('border-transparent');
+            wrapper.classList.remove('border-red-600', 'ring-2', 'ring-red-500/25');
+            errBox.classList.add('hidden');
+            hint.classList.remove('hidden');
+          }
+
+          window.recalculateClaimTotal();
+          return shipVal <= 1000;
+        };
+
+        window.submitClaimInfo = function () {
+          var isValid = window.validateAndRecalculateShipping();
+          if (!isValid) {
+            var errBox = document.getElementById('shipping-error-msg');
+            var shipInput = document.getElementById('input-shipping-fee');
+            errBox.classList.remove('animate-shake');
+            void errBox.offsetWidth;
+            errBox.classList.add('animate-shake');
+            shipInput.focus();
+            return;
+          }
+          window.navigateTo(8);
+        };
+
+        // Sync dynamic form fields across Screens 6, 7, 8, 9, 10, 11
+        window.syncApplicationData = function () {
+          var projInput = document.getElementById('input-project-title');
+          var projTitle = projInput && projInput.value.trim() ? projInput.value.trim() : 'AeroWeave Smart Orthosis';
+
+          var catSelect = document.getElementById('input-comp-category');
+          var catText = catSelect ? catSelect.value : 'Product Design & Assistive Tech';
+
+          var ent = parseFloat((document.getElementById('input-entrance-fee') || {}).value) || 0;
+          var ship = parseFloat((document.getElementById('input-shipping-fee') || {}).value) || 0;
+          var total = ent + ship;
+
+          var entFormatted = 'HKD ' + formatMoney(ent);
+          var shipFormatted = 'HKD ' + formatMoney(ship);
+          var totalFormatted = 'HKD ' + formatMoney(total);
+          var totalSymbol = 'HK$' + formatMoney(total);
+
+          var projCompEl = document.getElementById('proj-comp-name');
+          if (projCompEl) projCompEl.textContent = selectedCompetitionName;
+
+          document.querySelectorAll('.sync-comp-name').forEach(function (el) {
+            el.textContent = selectedCompetitionName;
+          });
+          document.querySelectorAll('.sync-project-title').forEach(function (el) {
+            el.textContent = projTitle;
+          });
+          document.querySelectorAll('.sync-entrance-hkd').forEach(function (el) {
+            el.textContent = entFormatted;
+          });
+          document.querySelectorAll('.sync-shipping-hkd').forEach(function (el) {
+            el.textContent = shipFormatted;
+          });
+          document.querySelectorAll('.sync-total-hkd').forEach(function (el) {
+            el.textContent = totalFormatted;
+          });
+          document.querySelectorAll('.sync-total-hkd-symbol').forEach(function (el) {
+            el.textContent = totalSymbol;
+          });
+
+          var revCat = document.getElementById('review-category');
+          if (revCat) revCat.textContent = catText;
+
+          var revRecog = document.getElementById('review-recog-level');
+          if (revRecog) revRecog.textContent = recognitionLevel + ' Recognition';
+
+          var revEnt = document.getElementById('review-entrance-fee');
+          if (revEnt) revEnt.textContent = entFormatted;
+          var revShip = document.getElementById('review-shipping-fee');
+          if (revShip) revShip.textContent = shipFormatted;
+          var revTot = document.getElementById('review-total-claim');
+          if (revTot) revTot.textContent = totalFormatted;
+
+          var receiptAmt = document.getElementById('receipt-amount-paid');
+          if (receiptAmt) receiptAmt.textContent = formatMoney(total);
+
+          window.syncBankToReceipt();
+        };
+
+        window.syncBankToReceipt = function () {
+          var bankSel = document.getElementById('hub-bank-select');
+          var bankOut = document.getElementById('receipt-bank-name');
+          if (bankSel && bankOut) {
+            bankOut.textContent = bankSel.value;
+          }
+        };
+
+        // Screen 10 Shipping Receipt Upload simulation
+        window.simulateShippingReceiptUpload = function () {
+          shippingReceiptUploaded = true;
+          var countBadge = document.getElementById('hub-upload-count');
+          var title = document.getElementById('shipping-receipt-title');
+          var sub = document.getElementById('shipping-receipt-sub');
+          var dropzone = document.getElementById('shipping-receipt-dropzone');
+          if (countBadge) countBadge.textContent = '2 of 2 Uploaded';
+          if (title) title.textContent = 'freight_dhl_slip_berlin.pdf ✓';
+          if (sub) sub.innerHTML = '840 KB • <span class="text-[#0F6E6E] dark:text-[#5EEAD4] font-bold">Auto-OCR Verified</span>';
+          if (dropzone) {
+            dropzone.classList.remove('border-dashed');
+            dropzone.classList.add('border-solid', 'border-[#0F6E6E]');
+          }
+          window.showToast('Courier airway bill slip uploaded & OCR verified.');
+        };
+
+        // Screen 11 Receipt download
+        window.downloadReceiptFile = function () {
+          var amt = document.getElementById('receipt-amount-paid').textContent;
+          var bank = document.getElementById('receipt-bank-name').textContent;
+          var content =
+            'THE HONG KONG POLYTECHNIC UNIVERSITY - SCHOOL OF DESIGN\n' +
+            'OFFICIAL DISBURSEMENT RECEIPT\n' +
+            '------------------------------------------------------\n' +
+            'Transaction Ref: TXN-2025-99012\n' +
+            'Submission ID:   #SUB-2025-089\n' +
+            'Applicant:       Chan Peter Ka Chun (21088492D)\n' +
+            'Competition:     ' + selectedCompetitionName + '\n' +
+            'Amount Paid:     HKD ' + amt + '\n' +
+            'Bank Account:    ' + bank + ' (****4567)\n' +
+            'Settlement Date: 05 Mar 2025, 11:20 HKT\n' +
+            'Status:          Credited via Autopay (Verified)\n';
+
+          var blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+          var url = URL.createObjectURL(blob);
+          var a = document.createElement('a');
+          a.href = url;
+          a.download = 'PolyU_Disbursement_Receipt_TXN-2025-99012.txt';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          URL.revokeObjectURL(url);
+          window.showToast('Official disbursement receipt downloaded.');
+        };
+
+        // Non-blocking Toast helper
+        var toastTimer = null;
+        window.showToast = function (msg) {
+          var banner = document.getElementById('toast-banner');
+          var textEl = document.getElementById('toast-message');
+          if (!banner || !textEl) return;
+          textEl.textContent = msg;
+          banner.classList.remove('hidden');
+          clearTimeout(toastTimer);
+          toastTimer = setTimeout(function () {
+            banner.classList.add('hidden');
+          }, 3000);
+        };
+
+        // Initialize on Screen 1
+        window.navigateTo(1);
+      })();
+    </script>
+  </body>
+</html>
